@@ -5,10 +5,8 @@ const router = express.Router();
 
 const multer = require("multer");
 const upload = multer().fields([
-  { name: "Aadhar_Front", maxCount: 1 },
-  { name: "Aadhar_Back", maxCount: 1 },
-  { name: "Highest_Degree", maxCount: 1 },
-  { name: "profile_photo", maxCount: 1 },
+  { name: "title_image", maxCount: 1 },
+  { name: "preview_video", maxCount: 1 }
 ]);
 
 const {
@@ -18,9 +16,8 @@ const {
 
 const {
   sanitizeBody,
-  createInstructorRegisterTableIfItNotCreated,
+  createInstructorCourseTableIfItNotCreated,
   areAllFilesPresent,
-  isStudentPresentInTable,
   isInstructorPresentInTable,
   saveDocuments,
   saveFormInUserRegisterTable,
@@ -32,9 +29,8 @@ router.use(
   handelSchemaJoi,
   sanitizeBody,
   handelSchemaJoi_AfterSanitize,
-  createInstructorRegisterTableIfItNotCreated,
+  createInstructorCourseTableIfItNotCreated,
   areAllFilesPresent,
-  isStudentPresentInTable,
   isInstructorPresentInTable,
   saveDocuments,
   saveFormInUserRegisterTable,

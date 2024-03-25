@@ -1,6 +1,6 @@
 "use strict";
 
-const CreateUserRegisterTable = `
+const CreateInstructorCourseTable = `
 CREATE TABLE IF NOT EXISTS userregister (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -13,4 +13,4 @@ CREATE TABLE IF NOT EXISTS userregister (
   );
 `;
 
-module.exports ={CreateUserRegisterTable};
+module.exports ={CreateInstructorCourseTable};

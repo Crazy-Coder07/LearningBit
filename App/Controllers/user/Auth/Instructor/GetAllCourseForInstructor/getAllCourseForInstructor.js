@@ -30,7 +30,7 @@ async function validateTokenAndUserid(req, res, next) {
       console.log(error); // Log error
       return returnServerRes(res, 500, false, "Internal server error");
     }
-  }
+}
 
 async function checkIfUserAreInstructorOrNot(req, res, next) {
     try {
@@ -52,26 +52,27 @@ async function checkIfUserAreInstructorOrNot(req, res, next) {
         if (results.length == 0) {
           return returnServerRes(res, 404, false, "User are Not Instructor Please first apply for the instructor");
         }
-
+        req.instructor_id = results[0].id;
         return next();
       });
     } catch (error) {
       console.log(error); 
       return returnServerRes(res, 500, false, "Internal server error");
     }
-  }
+}
   
-async function getInstructorProfileData(req, res, next) {
+async function getParticularInstructorAllCourseData(req, res, next) {
   try {
    
-    const user_id=req.user_id;
+    const instructor_id=req.instructor_id;
 
     const getuserdataQuery = `
-    SELECT id,student_id,name,phone,email,address,alternate_phone,profile_photo,bio,subjects,experience,qualifications,Aadhar_Front,Aadhar_Back,Highest_Degree
-    FROM instructor
-    WHERE student_id=?;
+       SELECT *
+       FROM course
+       WHERE instructor_id=?
+       GROUP BY course.id;
     `;
-    const value = [user_id];
+    const value = [instructor_id];
     
     await connection.query(getuserdataQuery, value,(err,results)=>{
         if (err) {
@@ -82,7 +83,7 @@ async function getInstructorProfileData(req, res, next) {
             return returnServerRes(res,404,false, "no data found for this user");
         }
       
-      const successMsg = `user data retrieved successfully for user_id: ${user_id}`;
+      const successMsg = `user Course data retrieved successfully for instructor_id: ${instructor_id}`;
 
       return returnServerRes(res,200,true,successMsg,results)
     })
@@ -92,9 +93,8 @@ async function getInstructorProfileData(req, res, next) {
   }
 }
 
-
 module.exports = { 
   validateTokenAndUserid, 
   checkIfUserAreInstructorOrNot,
-  getInstructorProfileData, 
+  getParticularInstructorAllCourseData, 
 };

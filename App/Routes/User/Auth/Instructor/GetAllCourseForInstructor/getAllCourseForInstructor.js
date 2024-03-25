@@ -5,14 +5,14 @@ const router = express.Router();
 
 const {
   validateTokenAndUserid,
-  getInstructorProfileData,
   checkIfUserAreInstructorOrNot,
-} = require("../../../../../Controllers/user/Auth/Instructor/GetProfile/getprofile");
+  getParticularInstructorAllCourseData,
+} = require("../../../../../Controllers/user/Auth/Instructor/GetAllCourseForInstructor/getAllCourseForInstructor");
 
 router.use(
     validateTokenAndUserid, 
     checkIfUserAreInstructorOrNot,
-    getInstructorProfileData
+    getParticularInstructorAllCourseData, 
 );
 
 module.exports = router;

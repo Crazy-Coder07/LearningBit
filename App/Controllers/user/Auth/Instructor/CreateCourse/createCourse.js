@@ -3,8 +3,8 @@
 const connection = require("../../../../../database/db");
 const { sanitizeString, returnServerRes } = require("../../../../../Helper");
 const {
-  CreateInstructorRegisterTable
-} = require("../../../../../Model/user/Auth/Registration/instructorRegisteTable");
+  CreateInstructorCourseTable
+} = require("../../../../../Model/user/Auth/CreateCourse/createCourse");
 const fs = require("fs");
 const path = require("path");
 const path_Resolve = path.resolve();
@@ -12,27 +12,23 @@ const path_Resolve = path.resolve();
 async function sanitizeBody(req, res, next) {
   try {
     const {
-      name,
-      phone,
-      email,
-      address,
-      alternate_phone,
-      bio,
-      subjects,
-      experience,
-      qualifications
+      course_name,
+      description  ,
+      duration ,
+      level_status,
+      Price,
+      course_fee_status,
+      prerequisites
     } = req.body;
 
     req.sanitizeBody_Data = {
-      name: sanitizeString(name),
-      phone: sanitizeString(phone),
-      email: sanitizeString(email),
-      address: sanitizeString(address),
-      alternate_phone: sanitizeString(alternate_phone),
-      bio: sanitizeString(bio),
-      subjects: sanitizeString(subjects),
-      experience: sanitizeString(experience),
-      qualifications: sanitizeString(qualifications),
+      course_name: sanitizeString(course_name),
+      description: sanitizeString(description ),
+      duration: sanitizeString(duration),
+      level_status: sanitizeString(level_status),
+      Price: sanitizeString(Price),
+      course_fee_status: sanitizeString(course_fee_status),
+      prerequisites: sanitizeString(prerequisites)
     };
 
     return next();
@@ -42,9 +38,9 @@ async function sanitizeBody(req, res, next) {
   }
 }
 
-async function createInstructorRegisterTableIfItNotCreated(req, res, next) {
+async function createInstructorCourseTableIfItNotCreated(req, res, next) {
   try {
-    connection.query(CreateInstructorRegisterTable, (queryErr, results) => {
+    connection.query(CreateInstructorCourseTable, (queryErr, results) => {
       if (queryErr) {
         console.error("Error userregister table:", queryErr);
         console.log(error);
@@ -63,10 +59,8 @@ async function createInstructorRegisterTableIfItNotCreated(req, res, next) {
 async function areAllFilesPresent(req, res, next) {
   try {
     const needFiles = [
-      "Aadhar_Front",
-      "Aadhar_Back",
-      "Highest_Degree",
-      "profile_photo",
+      "title_image",
+      "preview_video"
     ];
 
     const files = req.files;
@@ -86,15 +80,13 @@ async function areAllFilesPresent(req, res, next) {
   }
 }
 
-async function isStudentPresentInTable(req, res, next) {
-  try {
-    const user_id = req.user_id;
-    if (!user_id) {
-      return returnServerRes(res, 400, false, "x-student-id is missing");
-    }
 
+async function isInstructorPresentInTable(req, res, next) {
+  try {
+    
+    const user_id=req.user_id;
     const sql =
-      "SELECT id FROM instructor WHERE student_id=?";
+      "SELECT id FROM instructor WHERE student_id = ?";
 
     await connection.query(sql, [user_id], (err, results) => {
       if (err) {
@@ -102,43 +94,14 @@ async function isStudentPresentInTable(req, res, next) {
         return;
       }
 
-      //  if user is already registered
+      //  if this is an instructor
       if (results.length > 0) {
-        const errorMsg =
-          "this student is already applied for the instructor please wait some time then apply again";
+          req.instructor_id = results[0].id;
+         return next();
+      }
+      const errorMsg =
+          "You are not an instructor please apply for the instructor ";
         return returnServerRes(res, 400, false, errorMsg);
-      }
-
-      //  if user is not registered 
-      return next();
-
-    });
-  } catch (error) {
-    console.log(error); // Log error
-    return returnServerRes(res, 500, false, "Internal server error");
-  }
-}
-
-async function isInstructorPresentInTable(req, res, next) {
-  try {
-
-    const { email } = req.sanitizeBody_Data;
-    const sql =
-      "SELECT email FROM instructor WHERE email = ?";
-
-    await connection.query(sql, [email], (err, results) => {
-      if (err) {
-        console.error("Error executing query:", err);
-        return;
-      }
-
-      //  if user is already registered
-      if (results.length > 0) {
-        const errorMsg =
-          "user is already registered";
-        return returnServerRes(res, 400, false, errorMsg);
-      }
-      return next();
 
     });
   } catch (error) {
@@ -165,7 +128,7 @@ async function saveDocuments(req, res, next) {
 
       // Iterate through each file in the array
       fileArray.forEach((file) => {
-        const filePath = `/uploads/InstructorRegistration/${Date.now()}-${file.originalname}`;
+        const filePath = `/uploads/createCourse/${Date.now()}-${file.originalname}`;
 
         // Add the new "filePath" to the req.saveDocumentPath array
         req.saveDocumentPath[file.fieldname] = filePath;
@@ -198,31 +161,32 @@ async function saveDocuments(req, res, next) {
 
 async function saveFormInUserRegisterTable(req, res, next) {
   try {
-    const { name,
-      phone,
-      email,
-      address,
-      alternate_phone,
-      bio,
-      subjects,
-      experience,
-      qualifications } = req.sanitizeBody_Data;
+
+    const category_id=req.headers["x-category-id"]
+
+    const { 
+      course_name,
+      description  ,
+      duration ,
+      level_status,
+      Price,
+      course_fee_status,
+      prerequisites
+    } = req.sanitizeBody_Data;
 
     const {
-      Aadhar_Front,
-      Aadhar_Back,
-      Highest_Degree,
-      profile_photo,
+      title_image,
+      preview_video,
     } = req.saveDocumentPath;
 
-    const user_id = req.user_id;
+    const instructor_id = req.instructor_id;
 
     const sql = `
-      INSERT INTO instructor (name,phone,email,address,alternate_phone,bio,subjects,experience,qualifications,Aadhar_Front,Aadhar_Back,Highest_Degree,profile_photo,student_id )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      INSERT INTO course (course_name,description , duration, level_status, Price, course_fee_status,prerequisites,title_image,preview_video,category_id,instructor_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
 
-    const values = [name, phone, email, address, alternate_phone, bio, subjects, experience, qualifications, Aadhar_Front, Aadhar_Back, Highest_Degree, profile_photo, user_id];
+    const values = [course_name,description  ,duration ,level_status,Price,course_fee_status,prerequisites,title_image,preview_video,category_id,instructor_id];
 
     connection.query(sql, values, (error, results) => {
       if (error) {
@@ -245,20 +209,19 @@ async function saveFormInUserRegisterTable(req, res, next) {
 
 async function sendSuccessMsg(req, res, next) {
   try {
-    const successMsg = "User Registered successfully";
+    const successMsg = "Course Created Successfully";
 
     return returnServerRes(res, 200, true, successMsg);
   } catch (error) {
-    console.log(error); // Log error
+    console.log(error); 
     return returnServerRes(res, 500, false, "Internal server error");
   }
 }
 
 module.exports = {
   sanitizeBody,
-  createInstructorRegisterTableIfItNotCreated,
+  createInstructorCourseTableIfItNotCreated,
   areAllFilesPresent,
-  isStudentPresentInTable,
   isInstructorPresentInTable,
   saveDocuments,
   saveFormInUserRegisterTable,

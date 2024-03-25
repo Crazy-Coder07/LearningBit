@@ -3,48 +3,39 @@
 const Joi = require("joi");
 const { returnServerRes } = require("../../../../../Helper");
 
-// Define the schema for user registration
-const userRegisterSchema = Joi.object({
-  name: Joi.string().trim().required().messages({
-    "any.required": "Name is required",
-    "string.empty": "Name cannot be empty"
+const courseSchema = Joi.object({
+  course_name: Joi.string().trim().required().messages({
+    "any.required": "Course name is required",
+    "string.empty": "Course name cannot be empty"
   }),
-  email: Joi.string().trim().email().required().messages({
-    "any.required": "Email is required",
-    "string.email": "Invalid email format",
-    "string.empty": "Email cannot be empty"
+  description : Joi.string().trim().required().messages({
+    "any.required": "Description is required",
+    "string.empty": "Description cannot be empty"
   }),
-  phone: Joi.string().trim().min(10).max(25).required().pattern(/^\d+$/).messages({
-    "any.required": "Phone number is required",
-    "string.pattern.base": "Phone number must contain only numeric characters",
-    "string.min": "Phone number must be at least {#limit} characters long",
-    "string.max": "Phone number must be at most {#limit} characters long"
+  duration: Joi.string().trim().required().messages({
+    "any.required": "Duration is required",
+    "string.empty": "Duration cannot be empty"
   }),
-  address: Joi.string().trim().allow(null).required().max(255).messages({
-    "string.max": "Address must be at most {#limit} characters long"
+  level_status: Joi.string().trim().required().messages({
+    "any.required": "Level status is required",
+    "string.empty": "Level status cannot be empty"
   }),
-  alternate_phone: Joi.string().trim().allow(null).max(25).pattern(/^\d+$/).messages({
-    "string.pattern.base": "Alternate phone number must contain only numeric characters",
-    "string.max": "Alternate phone number must be at most {#limit} characters long"
+  Price: Joi.number().required().messages({
+    "any.required": "Price is required",
+    "number.base": "Price must be a number"
   }),
-  bio: Joi.string().trim().allow(null).max(255).messages({
-    "string.max": "Bio must be at most {#limit} characters long"
+  course_fee_status: Joi.string().trim().required().messages({
+    "any.required": "Course fee status is required",
+    "string.empty": "Course fee status cannot be empty"
   }),
-  subjects: Joi.string().trim().allow(null).max(255).messages({
-    "string.max": "Subjects must be at most {#limit} characters long"
-  }),
-  experience: Joi.string().trim().allow(null).max(255).messages({
-    "string.max": "Experience must be at most {#limit} characters long"
-  }),
-  qualifications: Joi.string().trim().allow(null).max(255).messages({
-    "string.max": "Qualifications must be at most {#limit} characters long"
+  prerequisites: Joi.string().trim().allow(null).max(255).messages({
+    "string.max": "Prerequisites must be at most {#limit} characters long"
   }),
 });
 
-// Middleware to handle Joi validation
 const handelSchemaJoi = (req, res, next) => {
   try {
-    const validation = userRegisterSchema.validate(req.body, { abortEarly: false });
+    const validation = courseSchema.validate(req.body, { abortEarly: false });
     if (!validation.error) {
       return next();
     }
@@ -59,10 +50,9 @@ const handelSchemaJoi = (req, res, next) => {
   }
 };
 
-// Middleware to handle Joi validation after sanitization
 const handelSchemaJoi_AfterSanitize = (req, res, next) => {
   try {
-    const validation = userRegisterSchema.validate(req.sanitizeBody_Data, { abortEarly: false });
+    const validation = courseSchema.validate(req.sanitizeBody_Data, { abortEarly: false });
     if (!validation.error) {
       return next();
     }
@@ -74,4 +64,7 @@ const handelSchemaJoi_AfterSanitize = (req, res, next) => {
   }
 };
 
-module.exports = { handelSchemaJoi, handelSchemaJoi_AfterSanitize };
+module.exports = { 
+  handelSchemaJoi, 
+  handelSchemaJoi_AfterSanitize 
+};
