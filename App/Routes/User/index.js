@@ -4,9 +4,9 @@ const express = require("express");
 const router = express.Router();
 
 // Routes
-const  registration=require("../User/Registration/index"); 
+const  registration=require("./Registration/index"); 
 
-const  auth=require("../User/Auth/index"); 
+const  auth=require("./Auth/index"); 
 
 const renewalAccessToken = require("./RenewAccessToken/RenewalAccessToken"); // Renewal access token
 

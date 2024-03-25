@@ -1,0 +1,44 @@
+"use strict";
+
+const express = require("express");
+const router = express.Router();
+
+const multer = require("multer");
+const upload = multer().fields([
+  { name: "Aadhar_Front", maxCount: 1 },
+  { name: "Aadhar_Back", maxCount: 1 },
+  { name: "Highest_Degree", maxCount: 1 },
+  { name: "profile_photo", maxCount: 1 },
+]);
+
+const {
+  handelSchemaJoi,
+  handelSchemaJoi_AfterSanitize,
+} = require("../../../../../Schema/user/Auth/instructor/CreateCourse/createCourse");
+
+const {
+  sanitizeBody,
+  createInstructorRegisterTableIfItNotCreated,
+  areAllFilesPresent,
+  isStudentPresentInTable,
+  isInstructorPresentInTable,
+  saveDocuments,
+  saveFormInUserRegisterTable,
+  sendSuccessMsg
+} = require("../../../../../Controllers/user/Auth/Instructor/CreateCourse/createCourse");
+
+router.use(
+  upload,
+  handelSchemaJoi,
+  sanitizeBody,
+  handelSchemaJoi_AfterSanitize,
+  createInstructorRegisterTableIfItNotCreated,
+  areAllFilesPresent,
+  isStudentPresentInTable,
+  isInstructorPresentInTable,
+  saveDocuments,
+  saveFormInUserRegisterTable,
+  sendSuccessMsg
+);
+
+module.exports = router;

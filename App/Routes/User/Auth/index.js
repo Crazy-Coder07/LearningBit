@@ -17,8 +17,13 @@ const {
   );
 
 const logOut = require("./LogOut/LogOut");
+const profile=require("./Profile/index");
+const instructor=require("./Instructor/index");
 
 
 router.delete("/log-out", logOut);
+router.use("/profile",profile);
+router.use("/instructor",instructor);
+
 
 module.exports = router;

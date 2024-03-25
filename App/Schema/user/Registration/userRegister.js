@@ -48,6 +48,11 @@ const userRegisterSchema = Joi.object({
   // photo: Joi.string().trim().uri().allow(null).messages({
   //   "string.uri": "Photo must be a valid URI"
   // })
+  childhood_name: Joi
+    .string()
+    .trim()
+    .required()
+    .messages({"any.required": "Childhood Name is required","string.empty": "Childhood Name cannot be empty"}),
 });
 
 const handelSchemaJoi = (req, res, next) => {

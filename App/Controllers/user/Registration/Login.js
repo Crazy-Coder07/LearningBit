@@ -61,9 +61,11 @@ async function IsPasswordMatchOrNot(req, res, next) {
   try {
     const { email, password } = req.sanitizeBody_Data;
 
-    const sql = "SELECT password FROM userregister WHERE email = ?";
+    const sql = `SELECT password 
+                 FROM userregister 
+                 WHERE email = ?`;
 
-    connection.query(sql, [email,password], async (error, results) => {
+    connection.query(sql, [email], async (error, results) => {
       if (error) {
         console.error("Error retrieving user data:", error);
         return returnServerRes(res, 500, false, "Internal server error");
@@ -180,7 +182,7 @@ async function saveTokenInDb(req, res, next) {
       }
     });
   } catch (error) {
-    console.log(error); // Log error
+    console.log(error); 
     return returnServerRes(res, 500, false, "Internal server error");
   }
 }
@@ -192,7 +194,7 @@ async function sendTokenToPhysios(req, res) {
     const successMsg = `Password verification Successfully`;
     return returnServerRes(res, 200, true, successMsg, token);
   } catch (error) {
-    console.log(error); // Log the error
+    console.log(error); 
     return returnServerRes(res, 500, false, "Internal server error");
   }
 }

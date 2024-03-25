@@ -8,7 +8,7 @@ const path = require('path');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, path.join(__dirname,'../../../../uploads'))
+      cb(null, path.join(__dirname,'../../../../../uploads'))
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now();
@@ -18,16 +18,13 @@ const storage = multer.diskStorage({
   
 const upload = multer({ storage: storage });
 
-const register = require("./Register");
-const login = require("./Login");
-const forgotPassword = require("./ForgotPassword");
+const editprofile=require("./EditProfile/editprofile");
 
+const getprofile=require("./GetProfile/getprofile");
 
-router.post("/register",upload.single("image"),register);
+router.patch("/edit-profile",upload.single("image"),editprofile);
 
-router.post("/login",login);
-
-router.post("/forgot-password",forgotPassword);
+router.get("/get-profile",getprofile)
 
 
 module.exports = router;

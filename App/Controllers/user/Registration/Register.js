@@ -15,7 +15,8 @@ async function sanitizeBody(req, res, next) {
       phone,
       email,
       address,
-      password
+      password,
+      childhood_name
     } = req.body;
 
     req.sanitizeBody_Data = {
@@ -24,11 +25,12 @@ async function sanitizeBody(req, res, next) {
       email: sanitizeString(email),
       address: sanitizeString(address),
       password: sanitizeString(password),
+      childhood_name:sanitizeString(childhood_name)
     };
 
     return next();
   } catch (error) {
-    console.log(error); // Log error
+    console.log(error); 
     return returnServerRes(res, 500, false, "Internal server error");
   }
 }
@@ -38,7 +40,7 @@ async function createUserRegisterTableIfItNotCreated(req, res, next) {
     connection.query(CreateUserRegisterTable, (queryErr, results) => {
       if (queryErr) {
         console.error("Error userregister table:", queryErr);
-        console.log(error); // Log error
+        console.log(error); 
         return returnServerRes(res, 500, false, "Internal server error");
       } else {
         console.log("userRegister table created successfully");
@@ -46,7 +48,7 @@ async function createUserRegisterTableIfItNotCreated(req, res, next) {
       }
     });
   } catch (error) {
-    console.log(error); // Log error
+    console.log(error); 
     return returnServerRes(res, 500, false, "Internal server error");
   }
 }
@@ -81,7 +83,7 @@ async function isUserPresentInTable(req, res, next) {
 
 async function saveFormInUserRegisterTable(req, res, next) {
   try {
-    const { name, phone, email, address, password } = req.sanitizeBody_Data;
+    const { name, phone, email, address, password,childhood_name} = req.sanitizeBody_Data;
 
     const photo = req.file ? req.file.filename : null;
    
@@ -93,11 +95,11 @@ async function saveFormInUserRegisterTable(req, res, next) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const sql = `
-      INSERT INTO userregister (name, phone, email, address, password,photo)
-      VALUES (?, ?, ?, ?, ?,?);
+      INSERT INTO userregister (name, phone, email, address, password,childhood_name,photo)
+      VALUES (?, ?, ?, ?, ?,?,?);
     `;
 
-    const values = [name, phone, email, address, hashedPassword,photo];
+    const values = [name, phone, email, address,hashedPassword,childhood_name,photo];
 
     connection.query(sql, values, (error, results) => {
       if (error) {
