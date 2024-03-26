@@ -14,6 +14,8 @@ const createCourse=require("./CreateCourse/createCourse");
 const GetAllCourseForInstructor=require("./GetAllCourseForInstructor/getAllCourseForInstructor");
 const GetCourseByIdForInstructor=require("./GetCourseByIdForInstructor/getAllCourseForInstructor");
 const InstructorFeedback=require("./InstructorFeedback/index");
+const InstructorCreateBlog=require("./Blogs/index");
+
 
 
 
@@ -27,6 +29,7 @@ router.post("/ins-create-course",createCourse);
 router.get("/ins-get-all-course",GetAllCourseForInstructor);
 router.get("/ins-get-course-by-id",GetCourseByIdForInstructor);
 router.use("/ins-feedback",InstructorFeedback)
+router.use("/ins-blog",InstructorCreateBlog)
 
 
 

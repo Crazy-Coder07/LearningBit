@@ -20,12 +20,14 @@ const instructor=require("./Instructor/index");
 const logOut = require("./LogOut/LogOut");
 const profile=require("./Profile/index");
 const StudentFeedBack=require("./StudentFeedBack/index");
+const Blog=require("./Blog/index");
 
 
 router.use("/instructor",instructor);
 router.delete("/log-out", logOut);
 router.use("/profile",profile);
 router.use("/student-feedback",StudentFeedBack);
+router.use("/blog",Blog);
 
 
 module.exports = router;
