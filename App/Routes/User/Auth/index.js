@@ -16,14 +16,16 @@ const {
     validateAccessTokenAgainstDatabase
   );
 
+const instructor=require("./Instructor/index");
 const logOut = require("./LogOut/LogOut");
 const profile=require("./Profile/index");
-const instructor=require("./Instructor/index");
+const StudentFeedBack=require("./StudentFeedBack/index");
 
 
+router.use("/instructor",instructor);
 router.delete("/log-out", logOut);
 router.use("/profile",profile);
-router.use("/instructor",instructor);
+router.use("/student-feedback",StudentFeedBack);
 
 
 module.exports = router;

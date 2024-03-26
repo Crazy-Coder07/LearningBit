@@ -18,7 +18,6 @@ const {
   sanitizeBody,
   createInstructorCourseTableIfItNotCreated,
   areAllFilesPresent,
-  isInstructorPresentInTable,
   saveDocuments,
   saveFormInUserRegisterTable,
   sendSuccessMsg
@@ -31,7 +30,6 @@ router.use(
   handelSchemaJoi_AfterSanitize,
   createInstructorCourseTableIfItNotCreated,
   areAllFilesPresent,
-  isInstructorPresentInTable,
   saveDocuments,
   saveFormInUserRegisterTable,
   sendSuccessMsg

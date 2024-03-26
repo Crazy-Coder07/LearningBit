@@ -19,8 +19,6 @@ const {
 const {
   sanitizeBody,
   areAllFilesPresent,
-  isStudentPresentInTable,
-  isInstructorPresentInTable,
   saveDocuments,
   saveFormInUserRegisterTable,
   sendSuccessMsg
@@ -32,8 +30,6 @@ router.use(
   sanitizeBody,
   handelSchemaJoi_AfterSanitize,
   areAllFilesPresent,
-  isStudentPresentInTable,
-  isInstructorPresentInTable,
   saveDocuments,
   saveFormInUserRegisterTable,
   sendSuccessMsg

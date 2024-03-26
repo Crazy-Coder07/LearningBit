@@ -68,70 +68,6 @@ async function areAllFilesPresent(req, res, next) {
   }
 }
 
-async function isStudentPresentInTable(req, res, next) {
-  try {
-    const user_id = req.user_id;
-    if (!user_id) {
-      return returnServerRes(res, 400, false, "x-student-id is missing");
-    }
-
-    const sql =
-      "SELECT id FROM instructor WHERE student_id=?";
-
-    await connection.query(sql, [user_id], (err, results) => {
-      if (err) {
-        console.error("Error executing query:", err);
-        return;
-      }
-
-      //  if user is already registered
-      if (results.length > 0) {
-        return next();
-
-      }
-
-      //  if user is not registered 
-      const errorMsg =
-        "this student is already applied for the instructor please wait some time then apply again";
-      return returnServerRes(res, 400, false, errorMsg);
-
-    });
-  } catch (error) {
-    console.log(error); // Log error
-    return returnServerRes(res, 500, false, "Internal server error");
-  }
-}
-
-async function isInstructorPresentInTable(req, res, next) {
-  try {
-
-    const instructor_id = req.headers["x-instructor-id"];
-
-    const sql =
-      "SELECT id FROM instructor WHERE id = ?";
-
-    await connection.query(sql, [instructor_id], (err, results) => {
-      if (err) {
-        console.error("Error executing query:", err);
-        return;
-      }
-
-      //  if user is already registered
-      if (results.length > 0) {
-        return next();
-
-      }
-      const errorMsg =
-        "Instructor is Not Registered";
-      return returnServerRes(res, 400, false, errorMsg);
-
-    });
-  } catch (error) {
-    console.log(error);
-    return returnServerRes(res, 500, false, "Internal server error");
-  }
-}
-
 async function saveDocuments(req, res, next) {
   try {
     req.saveDocumentPath = {};
@@ -201,7 +137,7 @@ async function saveFormInUserRegisterTable(req, res, next) {
     } = req.saveDocumentPath;
 
     const user_id = req.user_id;
-    const instructor_id = req.headers["x-instructor-id"];
+    const instructor_id = req.instructor_id;
 
 
     const sql = `
@@ -259,8 +195,6 @@ async function sendSuccessMsg(req, res, next) {
 module.exports = {
   sanitizeBody,
   areAllFilesPresent,
-  isStudentPresentInTable,
-  isInstructorPresentInTable,
   saveDocuments,
   saveFormInUserRegisterTable,
   sendSuccessMsg,

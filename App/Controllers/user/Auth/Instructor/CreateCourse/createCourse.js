@@ -80,36 +80,6 @@ async function areAllFilesPresent(req, res, next) {
   }
 }
 
-
-async function isInstructorPresentInTable(req, res, next) {
-  try {
-    
-    const user_id=req.user_id;
-    const sql =
-      "SELECT id FROM instructor WHERE student_id = ?";
-
-    await connection.query(sql, [user_id], (err, results) => {
-      if (err) {
-        console.error("Error executing query:", err);
-        return;
-      }
-
-      //  if this is an instructor
-      if (results.length > 0) {
-          req.instructor_id = results[0].id;
-         return next();
-      }
-      const errorMsg =
-          "You are not an instructor please apply for the instructor ";
-        return returnServerRes(res, 400, false, errorMsg);
-
-    });
-  } catch (error) {
-    console.log(error);
-    return returnServerRes(res, 500, false, "Internal server error");
-  }
-}
-
 async function saveDocuments(req, res, next) {
   try {
     req.saveDocumentPath = {};
@@ -222,7 +192,6 @@ module.exports = {
   sanitizeBody,
   createInstructorCourseTableIfItNotCreated,
   areAllFilesPresent,
-  isInstructorPresentInTable,
   saveDocuments,
   saveFormInUserRegisterTable,
   sendSuccessMsg,
