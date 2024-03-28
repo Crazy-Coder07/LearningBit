@@ -5,7 +5,7 @@ const router = express.Router();
 
 const {
   GetAllBlogs
-} = require("../../../../../Controllers/user/Auth/Blog/GetAllBlog/getAllBlog");
+} = require("../../../../../Controllers/user/Auth/Blog/GetAllBlog/getAllBlog")
 
 router.use(
   GetAllBlogs

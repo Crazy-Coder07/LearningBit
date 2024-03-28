@@ -21,6 +21,7 @@ const logOut = require("./LogOut/LogOut");
 const profile=require("./Profile/index");
 const StudentFeedBack=require("./StudentFeedBack/index");
 const Blog=require("./Blog/index");
+const Doubt=require("./Doubt/index");
 
 
 router.use("/instructor",instructor);
@@ -28,6 +29,7 @@ router.delete("/log-out", logOut);
 router.use("/profile",profile);
 router.use("/student-feedback",StudentFeedBack);
 router.use("/blog",Blog);
+router.use("/doubt",Doubt);
 
 
 module.exports = router;

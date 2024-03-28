@@ -17,9 +17,6 @@ const InstructorFeedback=require("./InstructorFeedback/index");
 const InstructorCreateBlog=require("./Blogs/index");
 
 
-
-
-
 router.post("/ins-register",InsRegister);
 
 router.use(checkIfUserAreInstructorOrNot);
