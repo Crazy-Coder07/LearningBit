@@ -16,6 +16,9 @@ const GetCourseByIdForInstructor=require("./GetCourseByIdForInstructor/getAllCou
 const InstructorFeedback=require("./InstructorFeedback/index");
 const InstructorCreateBlog=require("./Blogs/index");
 
+const createQuiz=require("./createQuiz/createQuiz");
+
+
 
 router.post("/ins-register",InsRegister);
 
@@ -25,8 +28,12 @@ router.patch("/ins-edit-profile",editprofile);
 router.post("/ins-create-course",createCourse);
 router.get("/ins-get-all-course",GetAllCourseForInstructor);
 router.get("/ins-get-course-by-id",GetCourseByIdForInstructor);
-router.use("/ins-feedback",InstructorFeedback)
-router.use("/ins-blog",InstructorCreateBlog)
+router.use("/ins-feedback",InstructorFeedback);
+router.use("/ins-blog",InstructorCreateBlog);
+
+// create quiz
+router.post("/ins-create-quiz",createQuiz);
+
 
 
 
