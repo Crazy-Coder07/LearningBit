@@ -15,10 +15,12 @@ app.use(morgan('combined'));
 
 // User Routes
 const userRoutes = require("./App/Routes/User/index");
-
+const chatbot=require("./chatbot")
 
 // User Routes
 app.use("/user", userRoutes);
+
+app.post("/chatbot", chatbot);
 
 
  
