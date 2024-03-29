@@ -23,6 +23,38 @@ async function sanitizeBody(req, res, next) {
   }
 }
 
+async function QuizNameShouldBeUnique(req, res, next) {
+  try {
+   
+    const { 
+      quiz_name,
+    } = req.sanitizeBody_Data;
+
+
+    const getuserdataQuery = `
+    SELECT quiz_name 
+    FROM quizes
+    WHERE quiz_name=?;
+    `;
+    const value = [quiz_name];
+    
+    await connection.query(getuserdataQuery, value,(err,results)=>{
+        if (err) {
+            console.error("Error executing query:", err);
+            return returnServerRes(res, 500, false, "Internal server error");
+          }
+        if(results.length>0){
+            return returnServerRes(res,404,false, "quiz name already exists please enter different quiz name");
+        }
+       return next();
+    })
+  } catch (error) {
+    console.log(error); // Log the error
+    return returnServerRes(res, 500, false, "Internal server error");
+  }
+}
+
+
 async function saveTheQuizIntoDb(req, res, next) {
   try {
 
@@ -105,13 +137,13 @@ async function saveTheQuizQuestionAnswer(req, res, next) {
     var question_id;
 
     await Promise.all(question_details.map(async (question) => {
-      const { question_name, answer, explanation,options} = question;
+      const { question_name, answer, explanation,options,marks} = question;
 
       const sql = `
-        INSERT INTO quiz_questions(question_name, answer, explanation, quiz_id)
-        VALUES (?, ?, ?, ?);
+        INSERT INTO quiz_questions(question_name, answer, explanation, quiz_id,marks)
+        VALUES (?, ?, ?, ?, ?);
       `;
-      const values = [question_name, answer, explanation, quiz_id];
+      const values = [question_name, answer, explanation, quiz_id,marks];
 
       await new Promise((resolve, reject) => {
         connection.query(sql, values, (error, results) => {
@@ -176,6 +208,7 @@ async function sendSuccessMsg(req, res, next) {
 
 module.exports = {
   sanitizeBody,
+  QuizNameShouldBeUnique,
   saveTheQuizIntoDb,
   saveTheQuizDurationIntoDb,
   saveTheQuizQuestionAnswer,

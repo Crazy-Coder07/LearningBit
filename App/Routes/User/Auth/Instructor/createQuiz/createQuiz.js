@@ -5,6 +5,7 @@ const router = express.Router();
 
 const {
   sanitizeBody,
+  QuizNameShouldBeUnique,
   saveTheQuizIntoDb,
   saveTheQuizDurationIntoDb,
   saveTheQuizQuestionAnswer,
@@ -13,6 +14,7 @@ const {
 
 router.use(
   sanitizeBody,
+  QuizNameShouldBeUnique,
   saveTheQuizIntoDb,
   saveTheQuizDurationIntoDb,
   saveTheQuizQuestionAnswer,

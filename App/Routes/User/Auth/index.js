@@ -22,6 +22,7 @@ const profile=require("./Profile/index");
 const StudentFeedBack=require("./StudentFeedBack/index");
 const Blog=require("./Blog/index");
 const Doubt=require("./Doubt/index");
+const Quiz=require("./Quiz/index");
 
 
 router.use("/instructor",instructor);
@@ -30,6 +31,8 @@ router.use("/profile",profile);
 router.use("/student-feedback",StudentFeedBack);
 router.use("/blog",Blog);
 router.use("/doubt",Doubt);
+router.use("/quiz",Quiz);
+
 
 
 module.exports = router;
