@@ -1,0 +1,41 @@
+.chatbot-container {
+    width: 60%;
+    margin: 1% auto;
+  }
+  
+  .messages-container {
+    height: 455px;
+    overflow-y: auto;
+    border: 3px solid #ccc;
+    padding: 10px;
+  }
+  
+  .message {
+    margin-bottom: 10px;
+  }
+  
+  .input-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .input-text {
+    flex: 1;
+    border: 1px solid #ccc;
+    padding: 5px;
+  }
+  
+  .enter-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  
+  .enter-button:hover {
+    background-color: #0056b3;
+  }
+  

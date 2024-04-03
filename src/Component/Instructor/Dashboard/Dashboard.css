@@ -1,0 +1,21 @@
+
+.dashhead{
+    display: flex;
+    flex-direction: row;
+}
+
+.sidebar{
+    top: 10%;
+    width: 16%;
+    left: 0%;
+    height: 74vh;
+    background-color: rgb(67, 63, 63);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    padding-top: 1%;
+    padding-left: 0.5%;
+    overflow-y: auto;
+}

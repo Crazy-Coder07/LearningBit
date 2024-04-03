@@ -1,0 +1,78 @@
+.bgimg {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .leftimgdiv{
+     flex-basis: 55%;
+  }
+  
+  .leftimg{
+     height: 100vh;
+     width: 110%;
+  }
+  .wel{
+    margin-top: -10%;
+    margin-bottom: 6%;
+    margin-left: 16%;
+    font-size: 30px;
+    font-weight: bolder;
+  }
+  
+  .bgregister {
+    flex-basis: 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .formelement {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .usericon {
+       margin-left: 40%;
+       margin-top: -30%;
+  }
+  
+  .userimg {
+    height: 20%;
+    width: 50%;
+  }
+  
+  .camicon {
+    margin-left: 47%;
+    margin-top: -30%;
+  }
+  
+  .camimg {
+    width: 35%;
+   
+  }
+  
+  .input {
+     height: 60%;
+     width: 160%;
+     border-radius: 5px;
+  }
+  
+  .signup {
+     margin-top: 6%;
+     background-color: #3B82F6;
+     color: black;
+     width: 40%;
+     height: 35px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     margin-left: 15%;
+     border-radius: 6px;
+  }
+  
+  .error{
+    color: red;
+    font-size: 13px;
+  }

@@ -1,0 +1,114 @@
+.head{
+    display: flex;
+    flex-direction: row;
+    padding-top: 1.4%;
+    padding-left: 3%;
+}
+.head1{
+    flex-basis: 12%;
+    font-family: bold;
+    font-size:140%;
+}
+.head2{
+    flex-basis: 25%;
+    margin-top: -1.5%;
+}
+.head3{
+    /* flex-basis: 4%; */
+    text-align: center;
+    min-width: 7%;
+}
+.head4{
+    /* flex-basis: 8%; */
+    text-align: center;
+    min-width: 16%;
+}
+.head9{
+    text-align: center;
+    /* flex-basis: 16%; */
+    min-width:24%;
+}
+.head5{
+    /* flex-basis: 16%; */
+    text-align: center;
+    min-width: 26%;
+}
+.head6{
+    /* flex-basis: 10%; */
+    text-align: center;
+    min-width:19%;
+}
+.head7{
+    /* flex-basis: 5%; */
+    text-align: center;
+    height: 100%;
+}
+.head8{
+    /* flex-basis:4%; */
+    margin-right:-16%;
+    text-align: center;
+    
+}
+.bit{
+    color: #ea8080;
+}
+.hovericon{
+    position: absolute;
+    right: 2%;
+    top: 8.1%;
+    color: rgba(32, 19, 19, 0.5); ;
+}
+.hoverdiv {
+    position: absolute;
+    top: 10%;
+    width: 16%;
+    right: 0.5%;
+    height: 74vh;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    padding-top: 1%;
+    padding-left: 0.5%;
+    overflow-y: auto;
+  }
+  
+  .hoverdiv div {
+    color: black;
+    height: 17%;
+    padding-left: 10%;
+    padding-top: 6%;
+  }
+  
+  .hoverdiv div:hover {
+    background-color: #6ee7b7; 
+    cursor: pointer;
+    width: 97%;
+    border-radius: 6px;
+  }
+
+  .head2 {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-bar {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1;
+    margin-right: 8px;
+  }
+  
+  .search-button {
+    padding: 8px 12px;
+    border: 1px solid #007bff;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  
+  
