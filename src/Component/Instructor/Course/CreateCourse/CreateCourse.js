@@ -2,7 +2,7 @@ import React from 'react'
 
 const CreateCourse = () => {
   return (
-    <div>CreateCourse</div>
+    <div style={{marginTop:"300px"}}>CreateCourse</div>
   )
 }
 
