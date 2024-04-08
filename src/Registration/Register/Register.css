@@ -76,3 +76,11 @@
   color: red;
   font-size: 13px;
 }
+.signinbtn{
+   cursor: pointer;
+   color: #3B82F6;
+   text-decoration: underline;
+}
+.dontaccount{
+
+}

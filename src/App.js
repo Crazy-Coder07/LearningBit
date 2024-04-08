@@ -8,7 +8,7 @@ import NotFound from './Component/NotFound/NotFound';
 
 function App() {
 
-  const accessToken = true;
+  const accessToken = !!localStorage.getItem("accessToken");
 
   return (
     <Router>

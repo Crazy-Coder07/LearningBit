@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import bcg from "./image/bcg1.jpg"
 import "./Login.css"
+import { postData } from '../../config/config';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
+    const navigate=useNavigate();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -13,6 +16,7 @@ const Login = () => {
         email: '',
         password: '',
     });
+    const [errormsg,setErrormsg]=useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,7 +31,7 @@ const Login = () => {
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async() => {
 
         const newErrors = {};
       
@@ -51,9 +55,25 @@ const Login = () => {
         }
 
         if (Object.keys(newErrors).length === 0) {
-            console.log("Email", formData.email)
-            console.log("Password", formData.password)
+            console.log("Email", formData.email);
+            console.log("Password", formData.password);
 
+            const body = {
+                    email:formData?.email,
+                    password:formData?.password
+                  };
+
+            const response=await postData("user/registration/login",body,{});
+            if(response?.data?.success){
+                   
+                    localStorage.setItem("accessToken", response?.data?.data?.accessToken);
+                    localStorage.setItem("refreshToken", response?.data?.data?.refreshToken);
+                    window.location.reload();
+                    navigate("/home")
+            }else{
+                // here first response=error
+                setErrormsg(response?.response?.data?.message);
+            }
         }
     };
 
@@ -96,8 +116,10 @@ const Login = () => {
                                 placeholder='Enter password'
                             />
                             {errors.password && <div className="error">{errors.password}</div>}
+                            {errormsg && <div className="error">{errormsg}</div>}
                         </div>
                     </div>
+                    <div className='dontaccount'>Don't have an account <span onClick={()=>navigate("/register")} className='signupbtn'>Sign Up</span></div>
                     <div
                         onClick={handleSubmit}
                         className='signup'

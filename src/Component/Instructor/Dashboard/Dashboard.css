@@ -6,7 +6,6 @@
 
 .sidebar{
     top: 10%;
-    width: 16%;
     left: 0%;
     height: 74vh;
     background-color: rgb(67, 63, 63);
@@ -18,4 +17,8 @@
     padding-top: 1%;
     padding-left: 0.5%;
     overflow-y: auto;
+    flex-basis: 15%;
+}
+.body{
+    flex-basis: 85%;
 }

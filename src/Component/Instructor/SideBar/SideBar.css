@@ -1,0 +1,33 @@
+.sidehead{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* padding-left: 20%; */
+  margin-top: 15%;
+  gap:20px;
+  font-weight: bolder;
+}
+
+.sidehead1{
+  cursor: pointer;
+}
+.sidehead2{
+    cursor: pointer;
+
+
+}
+.sidehead3{
+    cursor: pointer;
+
+
+}
+.sidehead4{
+    cursor: pointer;
+
+
+}
+.sidehead5{
+    cursor: pointer;
+
+
+}

@@ -93,7 +93,7 @@ const Header = () => {
                 My Cart
               </div>
               <div onClick={() => (
-                navigate("/home/dashboard")
+                navigate("/home/dashboard/course/all-course")
               )}>
                 Instructor Dashboard
               </div>
@@ -127,7 +127,10 @@ const Header = () => {
               )}>
                 Notifications
               </div>
-              <div>
+              <div onClick={()=>{
+                localStorage.removeItem("accessToken")
+                window.location.reload()
+              }}>
                 Log Out
               </div>
             </div>

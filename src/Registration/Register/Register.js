@@ -3,10 +3,15 @@ import user from "./image/pic.png";
 import cam from "./image/cam.png";
 import bcg from "./image/reg.jpg"
 import "./Register.css"
+import { useNavigate } from 'react-router-dom';
+import { postData } from "../../config/config"
+import axios from "axios";
 
 const Register = () => {
 
-    const [formData, setFormData] = useState({
+    const navigate = useNavigate();
+    const [errormsg, setErrormsg] = useState("");
+    const [formDetails, setFormDetails] = useState({
         name: '',
         phoneNumber: '',
         email: '',
@@ -23,13 +28,14 @@ const Register = () => {
         address: '',
         password: '',
         childhoodName: '',
-        image:''
+        image: ''
     });
+    const [image1, setImage1] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setFormDetails({
+            ...formDetails,
             [name]: value
         });
 
@@ -39,50 +45,50 @@ const Register = () => {
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
 
         const newErrors = {};
 
-        if (formData?.image==null || !formData.image.trim()) {
-            newErrors.image = 'image is required';
+        if (formDetails?.image == null || (typeof formDetails?.image === 'string' && !formDetails?.image.trim())) {
+            newErrors.image = 'Image is required';
             setErrors(newErrors);
             return;
         }
 
-        if (!formData.name.trim()) {
+        if (!formDetails.name.trim()) {
             newErrors.name = 'Name is required';
             setErrors(newErrors);
             return;
         }
-        if (!formData.phoneNumber.trim()) {
+        if (!formDetails.phoneNumber.trim()) {
             newErrors.phoneNumber = 'Phone number is required';
             setErrors(newErrors);
             return;
         }
-        if (!formData.email.trim()) {
+        if (!formDetails.email.trim()) {
             newErrors.email = 'Email is required';
             setErrors(newErrors);
             return;
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        } else if (!/\S+@\S+\.\S+/.test(formDetails.email)) {
             newErrors.email = 'Invalid email address';
             setErrors(newErrors);
             return;
         }
-        if (!formData.address.trim()) {
+        if (!formDetails.address.trim()) {
             newErrors.address = 'Address is required';
             setErrors(newErrors);
             return;
         }
-        if (!formData.password.trim()) {
+        if (!formDetails.password.trim()) {
             newErrors.password = 'Password is required';
             setErrors(newErrors);
             return;
-        } else if (formData.password.length < 6) {
+        } else if (formDetails.password.length < 6) {
             newErrors.password = 'Password must be at least 6 characters';
             setErrors(newErrors);
             return;
         }
-        if (!formData.childhoodName.trim()) {
+        if (!formDetails.childhoodName.trim()) {
             newErrors.childhoodName = 'Childhood name is required';
             setErrors(newErrors);
             return;
@@ -90,12 +96,31 @@ const Register = () => {
 
         if (Object.keys(newErrors).length === 0) {
             console.log('Form submitted successfully');
-            console.log("Name", formData.name)
-            console.log("Email", formData.email)
-            console.log("Phone Number", formData.phoneNumber)
-            console.log("Address", formData.address)
-            console.log("Password", formData.password)
-            console.log("ChildhoodName", formData.childhoodName)
+            console.log("Name", formDetails.name)
+            console.log("Email", formDetails.email)
+            console.log("Phone Number", formDetails.phoneNumber)
+            console.log("Address", formDetails.address)
+            console.log("Password", formDetails.password)
+            console.log("ChildhoodName", formDetails.childhoodName)
+            console.log("photo", formDetails.image)
+
+            const formData = new FormData();
+            formData.append('name', formDetails.name);
+            formData.append('email', formDetails.email);
+            formData.append('phone', formDetails.phoneNumber);
+            formData.append('address', formDetails.address);
+            formData.append('password', formDetails.password);
+            formData.append('childhood_name', formDetails.childhoodName);
+            formData.append('image', formDetails.image);
+
+            const response = await postData("user/registration/register", formData, {});
+
+            if (response?.data?.success) {
+                navigate("/login");
+            } else {
+                console.log(response);
+                setErrormsg(response?.response?.data?.message);
+            }
 
         }
     };
@@ -104,11 +129,13 @@ const Register = () => {
         const file = e.target.files[0];
         const reader = new FileReader();
 
-        reader.onloadend = () => {
-            setFormData({
-                ...formData,
-                image: reader.result
-            });
+        setFormDetails({
+            ...formDetails,
+            image: file
+        });
+
+        reader.onload = () => {
+            setImage1(reader.result);
         };
 
         if (file) {
@@ -129,20 +156,20 @@ const Register = () => {
                 <div className='bgregister'
                 >
                     <div className='wel'>
-                        Welcome To <span style={{color:"#6EE7B7"}}>Learning</span><span style={{color: "#EF4444"}}>Bit</span>
+                        Welcome To <span style={{ color: "#6EE7B7" }}>Learning</span><span style={{ color: "#EF4444" }}>Bit</span>
                     </div>
                     <div>
                         <div className='usericon'>
-                            <img 
-                                 className="userimg" 
-                                 src={formData.image || user} 
-                                 alt="not found" 
-                                 style={{
+                            <img
+                                className="userimg"
+                                src={image1 || user}
+                                alt="not found"
+                                style={{
                                     width: "100px",
                                     height: "120px",
                                     objectFit: "cover",
-                                    borderRadius: formData.image ? "50%" : "0%",
-                                    borderColor:"blue",
+                                    borderRadius: image1 ? "50%" : "0%",
+                                    borderColor: "blue",
                                     borderWidth: "12px",
                                 }}
                             />
@@ -152,8 +179,9 @@ const Register = () => {
                                 <img className='camimg' src={cam} alt="not found" />
                             </label>
                             <input
-                                id="fileInput"
+                                id='fileInput'
                                 type="file"
+                                name='image'
                                 style={{ display: "none" }}
                                 onChange={handleImageUpload}
                             />
@@ -167,7 +195,7 @@ const Register = () => {
                             <input
                                 className='input'
                                 name='name'
-                                value={formData.name}
+                                value={formDetails.name}
                                 onChange={handleChange}
                                 placeholder='Enter your name'
                             />
@@ -178,7 +206,7 @@ const Register = () => {
                             <input
                                 className='input'
                                 name='phoneNumber'
-                                value={formData.phoneNumber}
+                                value={formDetails.phoneNumber}
                                 onChange={handleChange}
                                 placeholder='Enter phone number'
                             />
@@ -189,7 +217,7 @@ const Register = () => {
                             <input
                                 className='input'
                                 name='email'
-                                value={formData.email}
+                                value={formDetails.email}
                                 onChange={handleChange}
                                 placeholder='Enter email address'
                             />
@@ -200,7 +228,7 @@ const Register = () => {
                             <input
                                 className='input'
                                 name='address'
-                                value={formData.address}
+                                value={formDetails.address}
                                 onChange={handleChange}
                                 placeholder='Enter address'
                             />
@@ -212,7 +240,7 @@ const Register = () => {
                                 className='input'
                                 name='password'
                                 type='password'
-                                value={formData.password}
+                                value={formDetails.password}
                                 onChange={handleChange}
                                 placeholder='Enter password'
                             />
@@ -223,12 +251,16 @@ const Register = () => {
                             <input
                                 className='input'
                                 name='childhoodName'
-                                value={formData.childhoodName}
+                                value={formDetails.childhoodName}
                                 onChange={handleChange}
                                 placeholder='Enter childhood name'
                             />
                             {errors.childhoodName && <div className="error">{errors.childhoodName}</div>}
+                            {errormsg && <div className='error'>{errormsg}</div>}
                         </div>
+                    </div>
+                    <div className='dontaccount'>
+                        Already have an account <span className='signinbtn' onClick={() => navigate("/login")}>Sign In</span>
                     </div>
                     <div
                         onClick={handleSubmit}

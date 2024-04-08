@@ -76,3 +76,12 @@
     color: red;
     font-size: 13px;
   }
+  .signupbtn{
+     cursor: pointer;
+     color: #3B82F6;
+     text-decoration: underline;
+  }
+  .dontaccount{
+     margin-top: 2%;
+     margin-left: 12%;
+  }
