@@ -3,10 +3,11 @@
 const express = require("express");
 const router = express.Router();
 
+
 const multer = require("multer");
 const upload = multer().fields([
   { name: "title_image", maxCount: 1 },
-  { name: "preview_video", maxCount: 1 }
+  { name: "preview_video", maxCount: 1 },
 ]);
 
 const {
@@ -20,18 +21,20 @@ const {
   areAllFilesPresent,
   saveDocuments,
   saveFormInUserRegisterTable,
+  saveTheTopicDetailsofCourse,
   sendSuccessMsg
 } = require("../../../../../Controllers/user/Auth/Instructor/CreateCourse/createCourse");
 
 router.use(
   upload,
-  handelSchemaJoi,
+  // handelSchemaJoi,
   sanitizeBody,
-  handelSchemaJoi_AfterSanitize,
+  // handelSchemaJoi_AfterSanitize,
   createInstructorCourseTableIfItNotCreated,
   areAllFilesPresent,
   saveDocuments,
   saveFormInUserRegisterTable,
+  saveTheTopicDetailsofCourse,
   sendSuccessMsg
 );
 

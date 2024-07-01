@@ -23,7 +23,7 @@ const login = require("./Login");
 const forgotPassword = require("./ForgotPassword");
 
 
-router.post("/register",upload.single("image"),register);
+router.post("/register",upload.single("image"),register); 
 
 router.post("/login",login);
 

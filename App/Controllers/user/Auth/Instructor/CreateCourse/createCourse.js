@@ -13,23 +13,41 @@ async function sanitizeBody(req, res, next) {
   try {
     const {
       course_name,
-      description  ,
-      duration ,
+      description,
+      duration,
       level_status,
       Price,
       course_fee_status,
-      prerequisites
+      prerequisites,
     } = req.body;
 
     req.sanitizeBody_Data = {
       course_name: sanitizeString(course_name),
-      description: sanitizeString(description ),
+      description: sanitizeString(description),
       duration: sanitizeString(duration),
       level_status: sanitizeString(level_status),
       Price: sanitizeString(Price),
       course_fee_status: sanitizeString(course_fee_status),
-      prerequisites: sanitizeString(prerequisites)
+      prerequisites: sanitizeString(prerequisites),
     };
+
+    // const topics = [];
+    // Object.keys(req.body).forEach((key) => {
+    //   if (key.startsWith('topics[')) {
+    //     const match = key.match(/\[([^)]+)\]/);
+    //     const index = match ? parseInt(match[1]) : -1;
+    //     if (index !== -1) {
+    //       const prop = key.split('[')[1].split(']')[1];
+    //       if (!topics[index]) {
+    //         topics[index] = {};
+    //       }
+    //       topics[index][prop] = req.body[key];
+    //     }
+    //   }
+    // });
+
+    // topics array will contain the parsed data
+    // console.log(topics);
 
     return next();
   } catch (error) {
@@ -132,12 +150,12 @@ async function saveDocuments(req, res, next) {
 async function saveFormInUserRegisterTable(req, res, next) {
   try {
 
-    const category_id=req.headers["x-category-id"]
+    const category_id = req.headers["x-category-id"]
 
-    const { 
+    const {
       course_name,
-      description  ,
-      duration ,
+      description,
+      duration,
       level_status,
       Price,
       course_fee_status,
@@ -156,7 +174,7 @@ async function saveFormInUserRegisterTable(req, res, next) {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
 
-    const values = [course_name,description  ,duration ,level_status,Price,course_fee_status,prerequisites,title_image,preview_video,category_id,instructor_id];
+    const values = [course_name, description, duration, level_status, Price, course_fee_status, prerequisites, title_image, preview_video, category_id, instructor_id];
 
     connection.query(sql, values, (error, results) => {
       if (error) {
@@ -164,6 +182,8 @@ async function saveFormInUserRegisterTable(req, res, next) {
         return returnServerRes(res, 500, false, "Internal server error");
       } else {
         if (results.affectedRows > 0) {
+          const courseId = results.insertId;
+          req.course_id = courseId;
           return next();
         } else {
           const errorMsg = "User already registered. Please try again";
@@ -177,13 +197,67 @@ async function saveFormInUserRegisterTable(req, res, next) {
   }
 }
 
+async function saveTheTopicDetailsofCourse(req, res, next) {
+  try {
+    const course_id = req.course_id;
+    const instructor_id = req.instructor_id;
+
+    const topics = [];
+    Object.keys(req.body).forEach((key) => {
+      if (key.startsWith('topics[')) {
+        const match = key.match(/\[([^)]+)\]/);
+        const index = match ? parseInt(match[1]) : -1;
+        if (index !== -1) {
+          const prop = key.split('[')[1].split(']')[1];
+          if (!topics[index]) {
+            topics[index] = {};
+          }
+          topics[index][prop] = req.body[key];
+        }
+      }
+    });
+
+
+    await Promise.all(topics.map(async (topic) => {
+      const { topic_name, topic_length, topic_des } = topic;
+
+      const sql = `
+        INSERT INTO question_topics(topic_name, topic_length , topic_des, course_id ,instructor_id )
+        VALUES (?, ?, ?, ?, ?);
+      `;
+      const values = [topic_name, topic_length, topic_des, course_id, instructor_id];
+
+      await new Promise((resolve, reject) => {
+        connection.query(sql, values, (error, results) => {
+          if (error) {
+            console.error("Error saving the topic details:", error);
+            reject(error);
+          } else {
+            if (results.affectedRows > 0) {
+              resolve();
+            } else {
+              reject("Failed to insert question details");
+            }
+          }
+        });
+      });
+    }));
+
+    next();
+
+  } catch (error) {
+    console.error("Error saving the topic for a course:", error);
+    return returnServerRes(res, 500, false, "Internal server error");
+  }
+}
+
 async function sendSuccessMsg(req, res, next) {
   try {
     const successMsg = "Course Created Successfully";
 
     return returnServerRes(res, 200, true, successMsg);
   } catch (error) {
-    console.log(error); 
+    console.log(error);
     return returnServerRes(res, 500, false, "Internal server error");
   }
 }
@@ -194,5 +268,6 @@ module.exports = {
   areAllFilesPresent,
   saveDocuments,
   saveFormInUserRegisterTable,
+  saveTheTopicDetailsofCourse,
   sendSuccessMsg,
 };

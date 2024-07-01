@@ -5,6 +5,8 @@ const router = express.Router();
 const { 
     checkIfUserAreInstructorOrNot 
 } = require("../../../../Controllers/user/Auth/middleware/auth");
+const multer = require('multer');
+const upload = multer();
 
   
 const InsRegister=require("./Registration/registration");

@@ -31,6 +31,7 @@ const courseSchema = Joi.object({
   prerequisites: Joi.string().trim().allow(null).max(255).messages({
     "string.max": "Prerequisites must be at most {#limit} characters long"
   }),
+  topic: Joi.array().items(Joi.string().max(255)).allow(null)
 });
 
 const handelSchemaJoi = (req, res, next) => {

@@ -54,23 +54,30 @@ async function validateuser_id(req, res, next) {
 
 async function UpdateProfileAndSaveIntoDatabase(req, res, next) {
   try {
-    const user_id=req.user_id;
-    const {name,phone,address}=req.sanitizeBody_Data;
+    const user_id = req.user_id;
+    const { name, phone, address } = req.sanitizeBody_Data;
 
     const photo = req.file ? req.file.filename : null;
-   
-    if (!photo) {
-      return returnServerRes(res, 400, false, "Error in uploading image");
+
+
+    var updateprofileQuery;
+    var value;
+    if (photo==null) {
+      updateprofileQuery = `
+        UPDATE userregister
+        SET name=?, phone=?, address=?
+        WHERE id = ?;
+      `;
+      value = [name, phone, address,  user_id];
+    } else {
+      updateprofileQuery = `
+        UPDATE userregister
+        SET name=?, phone=?, address=?, photo=?
+        WHERE id = ?;
+      `;
+      value = [name, phone, address, photo,user_id];
     }
 
-    const updateprofileQuery = `
-    UPDATE userregister
-    SET name=?, phone=?, address=?,photo=?
-    WHERE id = ?;
-    `;
-
-    const value = [name,phone,address,photo,user_id];
-    console.log("values",value);
     connection.query(updateprofileQuery, value, (err, results) => {
       if (err) {
         console.error("Error executing query:", err);
@@ -82,12 +89,13 @@ async function UpdateProfileAndSaveIntoDatabase(req, res, next) {
         const errorMsg = `User with ID ${user_id} not found or no changes were made`;
         return returnServerRes(res, 404, false, errorMsg);
       }
-    })
+    });
   } catch (error) {
     console.log(error); // Log the error
     return returnServerRes(res, 500, false, "Internal server error3");
   }
 }
+
 
 async function sendSuccessMsg(req, res) {
   try {

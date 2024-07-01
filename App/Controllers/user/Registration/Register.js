@@ -27,6 +27,7 @@ async function sanitizeBody(req, res, next) {
       password: sanitizeString(password),
       childhood_name:sanitizeString(childhood_name)
     };
+    console.log("this is sanitize body data",req.sanitizeBody_Data);
 
     return next();
   } catch (error) {
@@ -85,7 +86,11 @@ async function saveFormInUserRegisterTable(req, res, next) {
   try {
     const { name, phone, email, address, password,childhood_name} = req.sanitizeBody_Data;
 
+    console.log("this is sanitize body data",req.sanitizeBody_Data);
+
     const photo = req.file ? req.file.filename : null;
+
+    console.log(photo);
    
     if (!photo) {
       return returnServerRes(res, 400, false, "Error in uploading image");

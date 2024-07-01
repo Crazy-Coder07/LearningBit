@@ -7,7 +7,8 @@ const app=express();
 
 dotenv.config(); 
 
-
+// for retrieving the images from the database
+app.use(express.static('uploads'));
 
 app.use(express.json());
 app.use(cors());
