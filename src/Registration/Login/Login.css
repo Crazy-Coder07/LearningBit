@@ -57,18 +57,19 @@
      height: 60%;
      width: 160%;
      border-radius: 5px;
+     border: #3B82F6 double 2.5px ;
   }
   
-  .signup {
+  .login {
      margin-top: 6%;
      background-color: #3B82F6;
      color: black;
-     width: 40%;
+     width: 50%;
      height: 35px;
      display: flex;
      align-items: center;
      justify-content: center;
-     margin-left: 15%;
+     margin-left: 17%;
      border-radius: 6px;
   }
   

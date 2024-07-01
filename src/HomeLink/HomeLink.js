@@ -28,6 +28,7 @@ import Dashboard from '../Component/Instructor/Dashboard/Dashboard';
 import { FaRobot } from "react-icons/fa";
 import { FaCircle } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
+import InstructorApply from '../Component/Instructor/InstructorApply/InstructorApply';
 
 
 const HomeLink = () => {
@@ -62,6 +63,7 @@ const HomeLink = () => {
 
           {/* instructor routes */}
           <Route path='/instructor-intro' element={<InstructorIntro />} />
+          <Route path='/instructor-apply' element={<InstructorApply/>} />
           <Route path='/dashboard/*' element={<Dashboard />} />
 
 

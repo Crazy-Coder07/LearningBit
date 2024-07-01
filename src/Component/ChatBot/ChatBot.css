@@ -38,4 +38,11 @@
   .enter-button:hover {
     background-color: #0056b3;
   }
+
+  .question-message{
+     margin-bottom: 10px;
+  }
+  .answer-message{
+    margin-bottom: 10px;
+  }
   

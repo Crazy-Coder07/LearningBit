@@ -78,7 +78,7 @@ const postData = async (url, body, customHeaders = {}) => {
     let accessToken = localStorage.getItem("accessToken");
     const headers = {
       ...customHeaders,
-      "x-access-token": accessToken
+      "x-access-user-token": accessToken
     };
 
     if (body instanceof FormData) {
@@ -109,8 +109,15 @@ const patchData = async (url, body, customHeaders = {}) => {
     let accessToken = localStorage.getItem("accessToken");
     const headers = {
       ...customHeaders,
-      "x-access-token": accessToken,
+      "x-access-user-token": accessToken,
     };
+
+    if (body instanceof FormData) {
+      headers["Content-Type"] = "multipart/form-data";
+    }else{
+      headers["Content-Type"] = "application/json";
+    }
+
     const response = await axios.patch(`${baseURL}/${url}`, body, {
       headers: headers,
     });

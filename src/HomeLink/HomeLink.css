@@ -17,10 +17,10 @@
      overflow-x: hidden;
 }
 .chathead{
-     position: absolute;
-     right: 0.5%;
+     position: relative;
+     right: -84%;
      height: 7vh;
-     bottom: 6%;
+     margin-bottom:1%;
      width: 16%;
      background-color: white;
      display: flex;

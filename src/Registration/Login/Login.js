@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -105,6 +105,7 @@ const Login = () => {
                             />
                             {errors.email && <div className="error">{errors.email}</div>}
                         </div>
+
                         <div>
                             <div>Password</div>
                             <input
@@ -122,7 +123,7 @@ const Login = () => {
                     <div className='dontaccount'>Don't have an account <span onClick={()=>navigate("/register")} className='signupbtn'>Sign Up</span></div>
                     <div
                         onClick={handleSubmit}
-                        className='signup'
+                        className='login'
                         style={{ cursor: "pointer" }}
                     >
                         Log in

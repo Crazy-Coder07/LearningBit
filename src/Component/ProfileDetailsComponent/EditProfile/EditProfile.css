@@ -69,3 +69,7 @@
 .details-container{
     margin-top: 5%;
 }
+.editparent{
+    display: flex;
+    flex-direction: row;
+}
