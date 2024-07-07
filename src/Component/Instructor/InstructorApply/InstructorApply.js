@@ -206,7 +206,7 @@ const InstructorApply = () => {
 
     return (
         <div className=' bg-red-100'>
-            <ToastContainer />
+            <ToastContainer /> 
             <div className="max-w-md mx-auto">
                 <h1 className="text-4xl font-bold mb-4 text-center pt-10">Fill the instructor form</h1>
                 <div className='flex flex-col'>

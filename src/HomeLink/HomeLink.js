@@ -29,6 +29,9 @@ import { FaRobot } from "react-icons/fa";
 import { FaCircle } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import InstructorApply from '../Component/Instructor/InstructorApply/InstructorApply';
+import ArticlesById from '../Component/ArticleById/Articles';
+import AskDoubt from '../Component/AskDoubts/AskDoubts';
+import DoubtById from '../Component/DoubtById/DoubtById';
 
 
 const HomeLink = () => {
@@ -56,7 +59,10 @@ const HomeLink = () => {
           <Route path='/' element={<Home />} />
           <Route path='/courses' element={<HomeCourse />} />
           <Route path='/article' element={<Articles />} />
+          <Route path='/article-by-id' element={<ArticlesById />} />
           <Route path='/doubt' element={<Doubts />} />
+          <Route path='/ask-doubt' element={<AskDoubt/>} />
+          <Route path='/doubt-by-id' element={<DoubtById />} />
           <Route path='/quiz' element={<Quizes />} />
           <Route path='/chat-bot' element={<ChatBot />} />
 

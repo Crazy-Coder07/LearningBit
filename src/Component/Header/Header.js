@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { GrCart } from "react-icons/gr";
 import { LuUserCircle2 } from "react-icons/lu";
 import { FaSortUp } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,useLocation} from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isHovered, setIsHovered] = useState(false);
   const [sidebartab, setSidebartab] = useState(true);
   const [currentdiv,setCurrentdiv]=useState(1);
@@ -13,6 +14,24 @@ const Header = () => {
   if(sidebartab){
     localStorage.removeItem("sideTab");
   }
+
+  useEffect(() => {
+    const pathSegments = location.pathname.split('/');
+    const lastSegment = pathSegments[pathSegments.length - 1]; 
+
+    console.log(lastSegment);
+
+    if (lastSegment === 'article') {
+      setCurrentdiv(2);
+    } else if(lastSegment === "instructor-intro"){
+      setCurrentdiv(3);
+    } else if(lastSegment ==="doubt"){
+      setCurrentdiv(4);
+    } else if(lastSegment ==="quiz"){
+      setCurrentdiv(5);
+    } 
+
+  }, [location, currentdiv]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -116,10 +135,10 @@ const Header = () => {
       </div>
 
 
-      <div onMouseLeave={() => setIsHovered(false)}>
+      <div onMouseLeave={() => setIsHovered(false)} className=''>
         {isHovered && (
           <>
-            <div className='hovericon absolute right-[0%] top-[6.2%]'>
+            <div className='hovericon  absolute right-[0%] top-[6.2%]'>
               <FaSortUp size={61} />
             </div>
             <div className='hoverdiv absolute top-[10%] w-[16%] right-[8.4%] transform translate-x-1/2 h-[74vh] bg-white flex flex-col justify-top shadow-md py-1 pl-1 overflow-y-auto gap-4'>
