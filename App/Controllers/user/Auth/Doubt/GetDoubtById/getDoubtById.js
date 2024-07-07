@@ -6,7 +6,7 @@ const { sanitizeString, returnServerRes } = require("../../../../../Helper");
 async function IsDoubtIdExists(req, res, next) {
   try {
     const doubt_id = req.headers["x-doubt-id"];
-   
+
     const sql = `
        SELECT id
        FROM ask_doubt
@@ -35,9 +35,9 @@ async function IsDoubtIdExists(req, res, next) {
 
 async function GetDoubtById(req, res, next) {
   try {
-    
-    const doubt_id=req.headers["x-doubt-id"];
-   
+
+    const doubt_id = req.headers["x-doubt-id"];
+
     const sql = `
     SELECT 
          ask_doubt.id AS asd_doubt_id,
@@ -49,9 +49,12 @@ async function GetDoubtById(req, res, next) {
          ask_doubt.view_count,
          ask_doubt.postdate,
          userregister.id AS student_id,
-         userregister.name AS student_name
+         userregister.name AS student_name,
+         COUNT(CASE WHEN doubt_likes.like_status = '0' THEN 1 END) AS total_likes,
+         COUNT(CASE WHEN doubt_likes.like_status = '1' THEN 1 END) AS total_dislikes
     FROM ask_doubt 
     LEFT JOIN userregister ON ask_doubt.student_id=userregister.id
+    LEFT JOIN doubt_likes ON ask_doubt.id=doubt_likes.doubt_id
     WHERE ask_doubt.id=?
     `;
     const values = [doubt_id];
@@ -63,7 +66,9 @@ async function GetDoubtById(req, res, next) {
       } else {
         const successMsg = `Retrieve the blog for blog_id ==>${doubt_id}`;
 
-        return returnServerRes(res, 200, true,successMsg,results);
+        const resultObject = results.length > 0 ? results[0] : {};
+
+        return returnServerRes(res, 200, true, successMsg, resultObject);
       }
 
     });

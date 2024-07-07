@@ -5,14 +5,14 @@ const router = express.Router();
 
 const {
   IsBlogIdExists,
-  IsInstructorIdExists,
-  UpdateViewsByBlogId
+  UpdateViewsByBlogId,
+  TotalViews
 } = require("../../../../../Controllers/user/Auth/Blog/TotalBlogViewByBlogId/totalBlogViewByBlogId");
 
 router.use(
   IsBlogIdExists,
-  IsInstructorIdExists,
-  UpdateViewsByBlogId
+  UpdateViewsByBlogId,
+  TotalViews
 );
 
 module.exports = router;

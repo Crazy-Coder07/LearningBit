@@ -1,12 +1,12 @@
 "use strict";
 
 const connection = require("../../../../../database/db");
-const { sanitizeString, returnServerRes } = require("../../../../../Helper");
+const { returnServerRes } = require("../../../../../Helper");
 
 async function IsBlogIdExists(req, res, next) {
   try {
     const blog_id = req.headers["x-blog-id"];
-   
+
     const sql = `
        SELECT id
        FROM blog 
@@ -14,6 +14,8 @@ async function IsBlogIdExists(req, res, next) {
     `;
 
     const values = [blog_id];
+
+    console.log("value of blog_id",blog_id)
 
     connection.query(sql, values, (error, results) => {
       if (error) {
@@ -33,18 +35,18 @@ async function IsBlogIdExists(req, res, next) {
   }
 }
 
-async function AlreadyDisLikedBlog(req, res, next) {
+async function AlreadySavedBlog(req, res, next) {
   try {
     const blog_id = req.headers["x-blog-id"];
-    const user_id=req.user_id;
-   
+    const user_id = req.user_id;
+
     const sql = `
        SELECT id
-       FROM likes
-       WHERE blog_id = ? AND student_id = ? AND like_status='1'
+       FROM saved_blog
+       WHERE blog_id = ? AND student_id = ? AND saved_status='1'
     `;
 
-    const values = [blog_id,user_id];
+    const values = [blog_id, user_id];
 
     connection.query(sql, values, (error, results) => {
       if (error) {
@@ -52,7 +54,7 @@ async function AlreadyDisLikedBlog(req, res, next) {
         return returnServerRes(res, 500, false, "Internal server error");
       } else {
         if (results.length > 0) {
-          return returnServerRes(res, 409, false, "You Already DisLiked this Blog");
+          return returnServerRes(res, 409, false, "You Already Saved this blog");
         } else {
           return next();
         }
@@ -64,14 +66,14 @@ async function AlreadyDisLikedBlog(req, res, next) {
   }
 }
 
-async function PostLikes(req, res, next) {
+async function PostSaved(req, res, next) {
   try {
     const blog_id = req.headers["x-blog-id"];
     const user_id = req.user_id;
 
     const selectSql = `
-       SELECT id, like_status
-       FROM likes
+       SELECT id, saved_status
+       FROM saved_blog
        WHERE blog_id = ? AND student_id = ?
     `;
 
@@ -79,45 +81,43 @@ async function PostLikes(req, res, next) {
 
     connection.query(selectSql, selectValues, (error, results) => {
       if (error) {
-        console.error("Error checking if like exists:", error);
+        console.error("Error checking if saved exists:", error);
         return returnServerRes(res, 500, false, "Internal server error");
       } else {
         if (results.length > 0) {
-          const likeStatus = results[0].like_status;
+          const likeStatus = results[0].saved_status;
           if (likeStatus === '0') {
             const updateSql = `
-              UPDATE likes
-              SET like_status = '1'
+              UPDATE saved_blog
+              SET saved_status = '1'
               WHERE id = ?
             `;
             const updateValues = [results[0].id];
             connection.query(updateSql, updateValues, (error, updateResults) => {
               if (error) {
-                console.error("Error updating like status:", error);
+                console.error("Error updating saved_status:", error);
                 return returnServerRes(res, 500, false, "Internal server error");
               } else {
-                // const successMsg = `Again Disliked the blog for blog_id ==>${blog_id}`;
-                // return returnServerRes(res, 200, true, successMsg, updateResults);
-                return next();
+                const successMsg = `Again saved the blog for blog_id ==>${blog_id}`;
+                return returnServerRes(res, 200, true, successMsg, updateResults);
               }
             });
           } else {
-            return returnServerRes(res, 409, false, "You have already disliked this Blog");
+            return returnServerRes(res, 409, false, "You have already unsaved this Blog");
           }
         } else {
           const insertSql = `
-            INSERT INTO likes(blog_id, student_id, like_status)
+            INSERT INTO saved_blog(blog_id, student_id, saved_status)
             VALUES(?, ?, '1')
           `;
           const insertValues = [blog_id, user_id];
           connection.query(insertSql, insertValues, (error, insertResults) => {
             if (error) {
-              console.error("Error inserting like data:", error);
+              console.error("Error inserting saved blog data:", error);
               return returnServerRes(res, 500, false, "Internal server error");
             } else {
-              // const successMsg = `DisLike the blog for blog_id ==>${blog_id}`;
-              // return returnServerRes(res, 200, true, successMsg, insertResults);
-              return next();
+              const successMsg = `saved the blog for blog_id ==>${blog_id}`;
+              return returnServerRes(res, 200, true, successMsg, insertResults);
             }
           });
         }
@@ -129,40 +129,9 @@ async function PostLikes(req, res, next) {
   }
 }
 
-async function TotalDislikedByBlog(req, res, next) {
-  try {
-    const blog_id = req.headers["x-blog-id"];
-
-    const sql = `
-       SELECT COUNT(DISTINCT id) AS totalDislikes
-       FROM likes
-       WHERE blog_id = ? AND like_status = '1';
-    `;
-
-    const values = [blog_id];
-
-    connection.query(sql, values, (error, results) => {
-      if (error) {
-        console.error("Error retrieving total likes:", error);
-        return returnServerRes(res, 500, false, "Internal server error");
-      } else {
-        if (results.length > 0) {
-          const totalDislikes = results[0].totalDislikes;
-          return returnServerRes(res, 200, true, "Total dislikes retrieved successfully", { totalDislikes });
-        } else {
-          return returnServerRes(res, 404, false, "Blog not found or no likes");
-        }
-      }
-    });
-  } catch (error) {
-    console.error("Error retrieving total likes:", error);
-    return returnServerRes(res, 500, false, "Internal server error");
-  }
-}
 
 module.exports = {
   IsBlogIdExists,
-  AlreadyDisLikedBlog,
-  PostLikes,
-  TotalDislikedByBlog
+  AlreadySavedBlog,
+  PostSaved,
 };

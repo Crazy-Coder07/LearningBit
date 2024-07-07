@@ -9,13 +9,19 @@ async function GetAllBlogs(req, res, next) {
     
     const sql = `
        SELECT 
-             id AS blog_id,
-             title AS blog_title,
-             content AS blog_content,
-             title_image,
-             publication_date,
-             views_count  
+             blog.id AS blog_id,
+             blog.instructor_id AS  blog_instructor_id,
+             instructor.name AS instructor_name,
+             instructor.email AS instructor_email,
+             blog.title AS blog_title,
+             blog.content AS blog_content,
+             blog.title_image,
+             blog.publication_date,
+             blog.views_count,
+             COUNT(DISTINCT likes.id) AS like_count
        FROM blog 
+       LEFT JOIN instructor ON blog.instructor_id=instructor.id
+       LEFT JOIN likes ON blog.id=likes.blog_id AND likes.like_status='0'
        GROUP BY blog.id;
     `;
 

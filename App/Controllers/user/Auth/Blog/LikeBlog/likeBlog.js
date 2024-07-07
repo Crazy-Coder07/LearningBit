@@ -6,7 +6,7 @@ const { sanitizeString, returnServerRes } = require("../../../../../Helper");
 async function IsBlogIdExists(req, res, next) {
   try {
     const blog_id = req.headers["x-blog-id"];
-   
+
     const sql = `
        SELECT id
        FROM blog 
@@ -14,6 +14,8 @@ async function IsBlogIdExists(req, res, next) {
     `;
 
     const values = [blog_id];
+
+    console.log("value of blog_id",blog_id)
 
     connection.query(sql, values, (error, results) => {
       if (error) {
@@ -36,15 +38,15 @@ async function IsBlogIdExists(req, res, next) {
 async function AlreadyLikedBlog(req, res, next) {
   try {
     const blog_id = req.headers["x-blog-id"];
-    const user_id=req.user_id;
-   
+    const user_id = req.user_id;
+
     const sql = `
        SELECT id
        FROM likes
        WHERE blog_id = ? AND student_id = ? AND like_status='0'
     `;
 
-    const values = [blog_id,user_id];
+    const values = [blog_id, user_id];
 
     connection.query(sql, values, (error, results) => {
       if (error) {
@@ -52,7 +54,7 @@ async function AlreadyLikedBlog(req, res, next) {
         return returnServerRes(res, 500, false, "Internal server error");
       } else {
         if (results.length > 0) {
-          return returnServerRes(res, 404, false, "You Already Liked this Blog");
+          return returnServerRes(res, 409, false, "You Already Liked this Blog");
         } else {
           return next();
         }
@@ -96,12 +98,13 @@ async function PostLikes(req, res, next) {
                 console.error("Error updating like status:", error);
                 return returnServerRes(res, 500, false, "Internal server error");
               } else {
-                const successMsg = `Again liked the blog for blog_id ==>${blog_id}`;
-                return returnServerRes(res, 200, true, successMsg, updateResults);
+                // const successMsg = `Again liked the blog for blog_id ==>${blog_id}`;
+                // return returnServerRes(res, 200, true, successMsg, updateResults);
+                return next();
               }
             });
           } else {
-            return returnServerRes(res, 404, false, "You have already disliked this Blog");
+            return returnServerRes(res, 409, false, "You have already disliked this Blog");
           }
         } else {
           const insertSql = `
@@ -114,8 +117,9 @@ async function PostLikes(req, res, next) {
               console.error("Error inserting like data:", error);
               return returnServerRes(res, 500, false, "Internal server error");
             } else {
-              const successMsg = `Like the blog for blog_id ==>${blog_id}`;
-              return returnServerRes(res, 200, true, successMsg, insertResults);
+              // const successMsg = `Like the blog for blog_id ==>${blog_id}`;
+              // return returnServerRes(res, 200, true, successMsg, insertResults);
+              return next();
             }
           });
         }
@@ -127,8 +131,40 @@ async function PostLikes(req, res, next) {
   }
 }
 
+async function TotalLikedByBlog(req, res, next) {
+  try {
+    const blog_id = req.headers["x-blog-id"];
+
+    const sql = `
+       SELECT COUNT(DISTINCT id) AS totalLikes
+       FROM likes
+       WHERE blog_id = ? AND like_status = '0';
+    `;
+
+    const values = [blog_id];
+
+    connection.query(sql, values, (error, results) => {
+      if (error) {
+        console.error("Error retrieving total likes:", error);
+        return returnServerRes(res, 500, false, "Internal server error");
+      } else {
+        if (results.length > 0) {
+          const totalLikes = results[0].totalLikes;
+          return returnServerRes(res, 200, true, "Total likes retrieved successfully", { totalLikes });
+        } else {
+          return returnServerRes(res, 404, false, "Blog not found or no likes");
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Error retrieving total likes:", error);
+    return returnServerRes(res, 500, false, "Internal server error");
+  }
+}
+
 module.exports = {
   IsBlogIdExists,
   AlreadyLikedBlog,
-  PostLikes
+  PostLikes,
+  TotalLikedByBlog
 };

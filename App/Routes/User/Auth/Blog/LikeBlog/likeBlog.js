@@ -6,13 +6,15 @@ const router = express.Router();
 const {
   IsBlogIdExists,
   AlreadyLikedBlog,
-  PostLikes
+  PostLikes,
+  TotalLikedByBlog
 } = require("../../../../../Controllers/user/Auth/Blog/LikeBlog/likeBlog");
 
 router.use(
   IsBlogIdExists,
   AlreadyLikedBlog,
-  PostLikes
+  PostLikes,
+  TotalLikedByBlog
 );
 
 module.exports = router;
