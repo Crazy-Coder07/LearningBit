@@ -54,11 +54,11 @@ const Doubts = () => {
         >
           <div className="flex flex-col items-center text-center space-y-2 w-20">
             <div className="text-gray-700 flex items-center space-x-1">
-              <span>{0}</span>
+              <span>{doubt?.like_count}</span>
               <div className="text-xs text-gray-500">votes</div>
             </div>
             <div className="text-gray-700 flex items-center space-x-1">
-              <span>{0}</span>
+              <span>{doubt?.total_answer}</span>
               <div className="text-xs text-gray-500">answers</div>
             </div>
             <div className="text-gray-700 flex items-center space-x-1">
