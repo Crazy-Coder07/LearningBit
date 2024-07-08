@@ -8,16 +8,21 @@ async function GetAllDoubt(req, res, next) {
   try {
     
     const sql = `
-       SELECT 
-             id AS doubt_id,
-             title AS doubt_title,
-             Detail_Problems AS Detail_Problems,
-             what_try_what_get AS what_try_what_get,
-             got_error_image,
-             postdate,
-             view_count  
-       FROM ask_doubt 
-       GROUP BY ask_doubt.id;
+         SELECT 
+             ask_doubt.id AS doubt_id,
+             ask_doubt.title AS doubt_title,
+             ask_doubt.Detail_Problems AS Detail_Problems,
+             ask_doubt.what_try_what_get AS what_try_what_get,
+             ask_doubt.got_error_image,
+             ask_doubt.postdate,
+             ask_doubt.view_count,
+             COUNT(DISTINCT CASE WHEN doubt_likes.like_status = '0' THEN doubt_likes.id END) AS like_count,
+             COUNT(DISTINCT CASE WHEN doubt_likes.like_status = '1' THEN doubt_likes.id END) AS dislike_count,
+             COUNT(reply_doubt.doubt_id) AS total_answer
+        FROM ask_doubt 
+        LEFT JOIN doubt_likes ON ask_doubt.id = doubt_likes.doubt_id
+        LEFT JOIN reply_doubt ON ask_doubt.id=reply_doubt.doubt_id
+        GROUP BY ask_doubt.id;
     `;
 
     const values = [];

@@ -51,9 +51,39 @@ async function UpdateViewsByDoubtId(req, res, next) {
         console.error("Error saving user registration data:", error);
         return returnServerRes(res, 500, false, "Internal server error");
       } else {
+        // const successMsg = `View Increases By 1 for doubt_id ==>${doubt_id}`;
+
+        // return returnServerRes(res, 200, true,successMsg,results);
+        return next();
+      }
+
+    });
+  } catch (error) {
+    console.error("Error saving user registration data:", error);
+    return returnServerRes(res, 500, false, "Internal server error");
+  }
+}
+
+async function TotalViews(req, res, next) {
+  try {
+    
+    const doubt_id=req.headers["x-doubt-id"]
+   
+    const sql = `
+        SELECT view_count
+        from ask_doubt
+        WHERE id=?
+    `;
+    const values = [doubt_id];
+
+    connection.query(sql, values, (error, results) => {
+      if (error) {
+        console.error("Error saving user registration data:", error);
+        return returnServerRes(res, 500, false, "Internal server error");
+      } else {
         const successMsg = `View Increases By 1 for doubt_id ==>${doubt_id}`;
 
-        return returnServerRes(res, 200, true,successMsg,results);
+        return returnServerRes(res, 200, true, successMsg, { totalViews: results[0].view_count });
       }
 
     });
@@ -66,5 +96,6 @@ async function UpdateViewsByDoubtId(req, res, next) {
 
 module.exports = {
   IsDoubtIdExists,
-  UpdateViewsByDoubtId
+  UpdateViewsByDoubtId,
+  TotalViews
 };

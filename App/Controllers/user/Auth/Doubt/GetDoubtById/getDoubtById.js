@@ -50,6 +50,7 @@ async function GetDoubtById(req, res, next) {
          ask_doubt.postdate,
          userregister.id AS student_id,
          userregister.name AS student_name,
+         userregister.photo AS student_photo,
          COUNT(CASE WHEN doubt_likes.like_status = '0' THEN 1 END) AS total_likes,
          COUNT(CASE WHEN doubt_likes.like_status = '1' THEN 1 END) AS total_dislikes
     FROM ask_doubt 

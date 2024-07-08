@@ -6,13 +6,15 @@ const router = express.Router();
 const {
   IsDoubtIdExists,
   AlreadyDisLikedDoubt,
-  PostLikes
+  PostLikes,
+  TotalDislikedByDoubt
 } = require("../../../../../Controllers/user/Auth/Doubt/DisLikeDoubt/disLikeDoubt");
 
 router.use(
   IsDoubtIdExists,
   AlreadyDisLikedDoubt,
-  PostLikes
+  PostLikes,
+  TotalDislikedByDoubt
 );
 
 module.exports = router;

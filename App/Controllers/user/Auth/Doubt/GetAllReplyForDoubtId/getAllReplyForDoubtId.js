@@ -40,8 +40,16 @@ async function GetAllReplyForDoubtId(req, res, next) {
     const doubt_id = req.headers["x-doubt-id"];
 
     const sql = `
-          SELECT *
+          SELECT 
+               reply_doubt.doubt_id AS doubt_id,
+               reply_doubt.student_id AS student_id,
+               reply_doubt.answer AS sanswer,
+               reply_doubt.post_date AS post_date,
+               userregister.id AS student_id,
+               userregister.name AS student_name,
+               userregister.photo AS student_photo
           FROM reply_doubt
+          LEFT JOIN userregister ON reply_doubt.student_id=userregister.id
           WHERE doubt_id = ?
           ORDER BY post_date ASC;
     `;
