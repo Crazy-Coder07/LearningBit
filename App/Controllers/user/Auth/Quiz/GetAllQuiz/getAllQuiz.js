@@ -12,7 +12,8 @@ async function GetAllQuiz(req, res, next) {
              id AS quiz_id,
              instructor_id AS instructor_id,
              quiz_name AS quiz_name,
-             instructions AS instructions
+             instructions AS instructions,
+             created_at AS quiz_releasing_time
        FROM quizes 
        GROUP BY quizes.id;
     `;

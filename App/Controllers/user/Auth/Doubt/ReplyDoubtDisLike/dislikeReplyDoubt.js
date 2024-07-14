@@ -3,21 +3,21 @@
 const connection = require("../../../../../database/db");
 const { returnServerRes } = require("../../../../../Helper");
 
-async function IsDoubtIdExists(req, res, next) {
+async function IsReplyDoubtIdExists(req, res, next) {
   try {
-    const doubt_id = req.headers["x-doubt-id"];
+    const replydoubt_id = req.headers["x-reply-doubt-id"];
    
     const sql = `
        SELECT id
-       FROM ask_doubt
+       FROM reply_doubt
        WHERE id = ?
     `;
 
-    const values = [doubt_id];
+    const values = [replydoubt_id];
 
     connection.query(sql, values, (error, results) => {
       if (error) {
-        console.error("Error checking if Doubt id exists:", error);
+        console.error("Error checking if doubt id exists:", error);
         return returnServerRes(res, 500, false, "Internal server error");
       } else {
         if (results.length > 0) {
@@ -28,54 +28,54 @@ async function IsDoubtIdExists(req, res, next) {
       }
     });
   } catch (error) {
-    console.error("Error checking if Doubt id exists:", error);
+    console.error("Error checking if replydoubt_id exists:", error);
     return returnServerRes(res, 500, false, "Internal server error");
   }
 }
 
-async function AlreadyDisLikedDoubt(req, res, next) {
+async function AlreadyDisLikedReplyDoubt(req, res, next) {
   try {
-    const doubt_id = req.headers["x-doubt-id"];
+    const replydoubt_id = req.headers["x-reply-doubt-id"];
     const user_id=req.user_id;
    
     const sql = `
        SELECT id
-       FROM doubt_likes
-       WHERE doubt_id = ? AND student_id = ? AND like_status='1'
+       FROM reply_doubt_likes
+       WHERE reply_doubt_id = ? AND student_id = ? AND like_status='1'
     `;
 
-    const values = [doubt_id,user_id];
+    const values = [replydoubt_id,user_id];
 
     connection.query(sql, values, (error, results) => {
       if (error) {
-        console.error("Error checking if Doubt id exists:", error);
+        console.error("Error checking if replydoubt id exists:", error);
         return returnServerRes(res, 500, false, "Internal server error");
       } else {
         if (results.length > 0) {
-          return returnServerRes(res, 409, false, "You Already DisLiked this doubt");
+          return returnServerRes(res, 409, false, "You Already DisLiked this Reply");
         } else {
           return next();
         }
       }
     });
   } catch (error) {
-    console.error("Error checking if Doubt id exists:", error);
+    console.error("Error checking if reply_doubt id exists:", error);
     return returnServerRes(res, 500, false, "Internal server error");
   }
 }
 
 async function PostLikes(req, res, next) {
   try {
-    const doubt_id = req.headers["x-doubt-id"];
+    const replydoubt_id = req.headers["x-reply-doubt-id"];
     const user_id = req.user_id;
 
     const selectSql = `
        SELECT id, like_status
-       FROM doubt_likes
-       WHERE doubt_id = ? AND student_id = ?
+       FROM reply_doubt_likes
+       WHERE reply_doubt_id = ? AND student_id = ?
     `;
 
-    const selectValues = [doubt_id, user_id];
+    const selectValues = [replydoubt_id, user_id];
 
     connection.query(selectSql, selectValues, (error, results) => {
       if (error) {
@@ -86,7 +86,7 @@ async function PostLikes(req, res, next) {
           const likeStatus = results[0].like_status;
           if (likeStatus === '0') {
             const updateSql = `
-              UPDATE doubt_likes
+              UPDATE reply_doubt_likes
               SET like_status = '1'
               WHERE id = ?
             `;
@@ -96,7 +96,7 @@ async function PostLikes(req, res, next) {
                 console.error("Error updating like status:", error);
                 return returnServerRes(res, 500, false, "Internal server error");
               } else {
-                // const successMsg = `Again Disliked the Doubt for doubt_id ==>${doubt_id}`;
+                // const successMsg = `Again liked the blog for doubt_id ==>${doubt_id}`;
                 // return returnServerRes(res, 200, true, successMsg, updateResults);
                 return next();
               }
@@ -106,16 +106,16 @@ async function PostLikes(req, res, next) {
           }
         } else {
           const insertSql = `
-            INSERT INTO doubt_likes(doubt_id, student_id, like_status)
+            INSERT INTO reply_doubt_likes(reply_doubt_id, student_id, like_status)
             VALUES(?, ?, '1')
           `;
-          const insertValues = [doubt_id, user_id];
+          const insertValues = [replydoubt_id, user_id];
           connection.query(insertSql, insertValues, (error, insertResults) => {
             if (error) {
               console.error("Error inserting like data:", error);
               return returnServerRes(res, 500, false, "Internal server error");
             } else {
-              // const successMsg = `DisLike the Doubt for doubt_id ==>${doubt_id}`;
+              // const successMsg = `Like the blog for doubt_id ==>${doubt_id}`;
               // return returnServerRes(res, 200, true, successMsg, insertResults);
               return next();
             }
@@ -129,17 +129,17 @@ async function PostLikes(req, res, next) {
   }
 }
 
-async function TotalDislikedByDoubt(req, res, next) {
+async function TotalDisLikedByReplyDoubt(req, res, next) {
   try {
-    const doubt_id = req.headers["x-doubt-id"];
+    const replydoubt_id = req.headers["x-reply-doubt-id"];
 
     const sql = `
-       SELECT COUNT(DISTINCT id) AS totalDislikes
-       FROM doubt_likes
-       WHERE doubt_id =? AND like_status = '1';
+       SELECT COUNT(DISTINCT id) AS totalDisLikes
+       FROM reply_doubt_likes
+       WHERE reply_doubt_id =? AND like_status = '1';
     `;
 
-    const values = [doubt_id];
+    const values = [replydoubt_id];
 
     connection.query(sql, values, (error, results) => {
       if (error) {
@@ -147,22 +147,22 @@ async function TotalDislikedByDoubt(req, res, next) {
         return returnServerRes(res, 500, false, "Internal server error");
       } else {
         if (results.length > 0) {
-          const totalDislikes = results[0].totalDislikes;
-          return returnServerRes(res, 200, true, "Total dislikes retrieved successfully", { totalDislikes });
+          const totalLikes = results[0].totalLikes;
+          return returnServerRes(res, 200, true, "Total dislikes retrieved successfully", { totalLikes });
         } else {
-          return returnServerRes(res, 404, false, "doubt not found or no likes");
+          return returnServerRes(res, 404, false, "replydoubt not found or no likes");
         }
       }
     });
   } catch (error) {
-    console.error("Error retrieving total dislikes:", error);
+    console.error("Error retrieving total likes:", error);
     return returnServerRes(res, 500, false, "Internal server error");
   }
 }
 
 module.exports = {
-  IsDoubtIdExists,
-  AlreadyDisLikedDoubt,
+  IsReplyDoubtIdExists,
+  AlreadyDisLikedReplyDoubt,
   PostLikes,
-  TotalDislikedByDoubt
+  TotalDisLikedByReplyDoubt
 };

@@ -41,7 +41,7 @@ async function AlreadyEnrolledTheQuiz(req, res, next) {
     const sql = `
        SELECT percentage_score
        FROM quiz_enrolled
-       WHERE quiz_id = ? AND student_id = ? 
+       WHERE quiz_id = ? AND student_id = ?
     `;
 
     const values = [quiz_id,user_id];

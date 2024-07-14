@@ -26,6 +26,9 @@ const DisLikeDoubt = require("./DisLikeDoubt/disLikeDoubt");
 const TotalDoubtViewByDoubtId = require("./TotalDoubtViewByDoubtId/totalDoubtViewByDoubtId");
 const ReplyDoubt = require("./ReplyDoubt/replyDoubt");
 const GetAllReplyForDoubtId = require("./GetAllReplyForDoubtId/getAllReplyForDoubtId");
+const LikeReplyDoubt = require("./ReplyDoubtLike/likeReplyDoubt");
+const DisLikeReplyDoubt = require("./ReplyDoubtDisLike/dislikeReplyDoubt");
+
 
 
 
@@ -37,6 +40,10 @@ router.post("/dislike-doubt",DisLikeDoubt);
 router.patch("/total-view-by-doubt-id",TotalDoubtViewByDoubtId);
 router.post("/reply-doubt",ReplyDoubt);
 router.get("/get-all-reply-for-doubtid",GetAllReplyForDoubtId);
+router.post("/reply-doubt-like",LikeReplyDoubt);
+router.post("/reply-doubt-dislike",DisLikeReplyDoubt);
+
+
 
 
 

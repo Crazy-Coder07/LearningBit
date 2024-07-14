@@ -41,17 +41,28 @@ async function GetAllReplyForDoubtId(req, res, next) {
 
     const sql = `
           SELECT 
-               reply_doubt.doubt_id AS doubt_id,
-               reply_doubt.student_id AS student_id,
-               reply_doubt.answer AS sanswer,
-               reply_doubt.post_date AS post_date,
-               userregister.id AS student_id,
-               userregister.name AS student_name,
-               userregister.photo AS student_photo
-          FROM reply_doubt
-          LEFT JOIN userregister ON reply_doubt.student_id=userregister.id
-          WHERE doubt_id = ?
-          ORDER BY post_date ASC;
+              reply_doubt.id AS reply_id,
+              reply_doubt.doubt_id AS doubt_id,
+              reply_doubt.student_id AS student_id,
+              reply_doubt.answer AS sanswer,
+              reply_doubt.post_date AS post_date,
+              userregister.id AS student_id,
+              userregister.name AS student_name,
+              userregister.photo AS student_photo,
+              COUNT(CASE WHEN reply_doubt_likes.like_status = '0' THEN 1 END) AS like_count,
+              COUNT(CASE WHEN reply_doubt_likes.like_status = '1' THEN 1 END) AS dislike_count
+          FROM 
+              reply_doubt
+          LEFT JOIN 
+              userregister ON reply_doubt.student_id = userregister.id
+          LEFT JOIN 
+              reply_doubt_likes ON reply_doubt.id = reply_doubt_likes.reply_doubt_id
+          WHERE 
+              doubt_id = ?
+          GROUP BY 
+              reply_doubt.id
+          ORDER BY 
+              post_date ASC;
     `;
 
     const values = [doubt_id];
