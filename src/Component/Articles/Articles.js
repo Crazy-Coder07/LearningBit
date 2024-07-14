@@ -4,7 +4,6 @@ import { IoEyeOutline } from "react-icons/io5";
 import { IoIosArrowForward } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { FcLike } from "react-icons/fc";
-import { IoEyeSharp } from "react-icons/io5";
 
 
 

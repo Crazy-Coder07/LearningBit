@@ -5,6 +5,10 @@ import { getData, baseURL, postData, patchData } from '../../config/config';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { IoEyeOutline } from "react-icons/io5";
+import { BiDislike } from "react-icons/bi";
+import { BiLike } from "react-icons/bi";
+import { BiSolidLike } from "react-icons/bi";
+import { BiSolidDislike } from "react-icons/bi";
 
 const DoubtById = () => {
   const location = useLocation();
@@ -16,6 +20,9 @@ const DoubtById = () => {
   const [totalViews, setTotalViews] = useState();
   const [allAnswers, setAllAnswers] = useState([]);
   const [newAnswer, setNewAnswer] = useState('');
+  const [likeclik, setLikeclick] = useState(false);
+  const [dislikeclik, setDislikeclick] = useState(false);
+
 
   useEffect(() => {
     const fetchdata = async () => {
@@ -49,15 +56,15 @@ const DoubtById = () => {
       const response = await getData('user/auth/doubt/get-all-reply-for-doubtid', headers);
       if (response?.data?.success) {
         setAllAnswers(response?.data?.data);
+        setLikeclick(false);
+        setDislikeclick(false);
       } else {
         console.log(response);
       }
     };
 
-    window.scrollTo(0, 0);
     fetchdata();
-  }, [id,newAnswer]);
-
+  }, [id, newAnswer, likeclik, dislikeclik]);
 
   useEffect(() => {
     const fetchdata1 = async () => {
@@ -100,7 +107,7 @@ const DoubtById = () => {
   const handledislike = async () => {
     let doubt_id = id;
     const headers = {
-      "x-doubt-id": doubt_id,
+      "x-doubt-id": doubt_id
     };
 
     const response = await postData('user/auth/doubt/dislike-doubt', {}, headers);
@@ -135,6 +142,46 @@ const DoubtById = () => {
       toast.error("Something went wrong");
     }
   }
+
+  const handlereplylike = async (reply_id) => {
+    const headers = {
+      "x-reply-doubt-id": reply_id,
+    };
+
+    const response = await postData('user/auth/doubt/reply-doubt-like', {}, headers);
+    if (response?.data?.success) {
+      // setAllAnswers(response?.data?.data);
+      setLikeclick(true);
+      toast.success("Liked the Reply");
+    } else if (response?.response?.data?.status === 409) {
+      console.log(response);
+      toast.error(response?.response?.data?.message);
+    } else {
+      console.log(response);
+      toast.error("Something went wrong");
+    }
+  }
+
+  const handlereplydislike = async (reply_id) => {
+    const headers = {
+      "x-reply-doubt-id": reply_id,
+    };
+
+    const response = await postData('user/auth/doubt/reply-doubt-dislike', {}, headers);
+    if (response?.data?.success) {
+      // setAllAnswers(response?.data?.data);
+      setDislikeclick(true);
+      toast.success("Disliked the reply");
+    } else if (response?.response?.data?.status === 409) {
+      console.log(response);
+      toast.error(response?.response?.data?.message);
+    } else {
+      console.log(response);
+      toast.error("Something went wrong");
+    }
+  }
+
+
 
   return (
     <div className="p-6 font-sans">
@@ -198,13 +245,13 @@ const DoubtById = () => {
       </div>
 
       <div className="w-full my-6">
-        <textarea 
+        <textarea
           className="w-full p-4 border rounded-lg"
           value={newAnswer}
           onChange={(e) => setNewAnswer(e.target.value)}
           placeholder="Write your answer here..."
         />
-        <button 
+        <button
           className="bg-blue-500 text-white px-4 py-2 rounded mt-2 float-right"
           onClick={handleReply}
         >
@@ -213,7 +260,7 @@ const DoubtById = () => {
       </div>
 
       {/* Displaying All Answers */}
-      <div className="mt-10 ml-[30%]">
+      <div className="mt-10 ml-[25%]">
         <h2 className="text-2xl font-bold mb-4">Answers:</h2>
         {allAnswers.length > 0 ? (
           allAnswers.map((answer, index) => (
@@ -236,6 +283,36 @@ const DoubtById = () => {
                   })}
                 </p>
                 <p>{answer.sanswer}</p>
+                <div className='flex flex-row gap-10 mt-[2%] mb-[1%] '>
+                  {
+                    answer.like_count === 0 ? (
+                      <>
+                        <BiLike onClick={() => { handlereplylike(answer.reply_id) }} size={"25"} className='cursor-pointer'/>
+                        <span className='font-bold'>{answer.like_count}</span>
+                      </>
+                    ) : (
+                      <>
+                        <BiSolidLike onClick={() => { handlereplylike(answer.reply_id) }} size={"25"} className='cursor-pointer'/>
+                        <span className='font-bold'>{answer.like_count}</span>
+                      </>
+                    )
+                  }
+
+                  {
+                    answer.dislike_count === 0 ? (
+                      <>
+                        <BiDislike onClick={() => { handlereplydislike(answer.reply_id) }} size={"25"} className='cursor-pointer'/>
+                        <span className='font-bold'>{answer.dislike_count}</span>
+                      </>
+                    ) : (
+                      <>
+                        <BiSolidDislike onClick={() => { handlereplydislike(answer.reply_id) }} size={"25"} className='cursor-pointer'/>
+                        <span className='font-bold'>{answer.dislike_count}</span>
+                      </>
+                    )
+                  }
+                </div>
+
               </div>
             </div>
 

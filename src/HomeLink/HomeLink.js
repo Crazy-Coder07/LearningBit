@@ -32,6 +32,7 @@ import InstructorApply from '../Component/Instructor/InstructorApply/InstructorA
 import ArticlesById from '../Component/ArticleById/Articles';
 import AskDoubt from '../Component/AskDoubts/AskDoubts';
 import DoubtById from '../Component/DoubtById/DoubtById';
+import QuizesById from '../Component/QuizesById/QuizesById';
 
 
 const HomeLink = () => {
@@ -64,6 +65,7 @@ const HomeLink = () => {
           <Route path='/ask-doubt' element={<AskDoubt/>} />
           <Route path='/doubt-by-id' element={<DoubtById />} />
           <Route path='/quiz' element={<Quizes />} />
+          <Route path='/quiz-by-id' element={<QuizesById />} />
           <Route path='/chat-bot' element={<ChatBot />} />
 
 
