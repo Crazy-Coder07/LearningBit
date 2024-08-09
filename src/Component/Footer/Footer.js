@@ -17,8 +17,8 @@ const Footer = () => {
     <footer>
       <div className="container">
         <div className="col-1">
-          <img src={img1} alt="not found" />
-          <p>Follow my Github account named Crazy-Coder07 and LinkedIn to see more of such projects and other posts. Also Like and share these posts. Also follow me on Instagram and Youtube. I hope you will like my content.</p>
+          <img src={img1} alt="not found" className='rounded-lg' />
+          <p>I invite you to connect with me on GitHub (Crazy-Coder07) and LinkedIn to explore more of my projects and posts. Additionally, feel free to follow me on Instagram and YouTube for regular updates. Your likes, shares, and support would be greatly appreciated. I hope you enjoy my content!</p>
         </div>
         <div className="col-2">
           <h3>Quick Links</h3>
@@ -26,7 +26,7 @@ const Footer = () => {
             <li style={{ cursor: "pointer" }}><a onClick={() => (
               window.scrollTo(0, 0),
               navigate("/home/about"))}
-            >About</a></li>
+            >About Us</a></li>
 
             <li style={{ cursor: "pointer" }}><a onClick={() => (
               window.scrollTo(0, 0),

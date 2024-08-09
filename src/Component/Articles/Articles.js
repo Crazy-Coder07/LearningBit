@@ -50,13 +50,13 @@ const Articles = () => {
           <h2 className="text-xl font-bold mb-4">Viewing {apidata.length} Blogs</h2>
           <div className="flex flex-wrap -mx-4">
             {apidata.map((blog) => (
-              <div key={blog.blog_id} className="w-1/3 px-4 mb-8">
+              <div key={blog.blog_id} className="w-1/3 px-4 mb-8 lg:w-1/2 sm:w-1/2">
                 <div className="max-w-sm rounded overflow-hidden shadow-xl min-h-full flex flex-col transition duration-300 ease-in-out transform hover:scale-105 hover:opacity-90 group">
                   <div className="relative">
                     <img
                       src={`${baseURL}/${blog?.title_image}`}
                       alt="Thumbnail Not Found"
-                      className="object-cover p-5"
+                      className="object-cover p-5 lg:ml-10 lg:transform scale-25"
                       style={{ maxHeight: 300, minHeight: 300 }}
                     />
                     <div className="absolute top-0 right-0 p-2 flex items-center z-10 bg-opacity-70 rounded">

@@ -70,7 +70,7 @@ const Doubts = () => {
             <h3 className="text-blue-500 text-lg font-semibold">
               {doubt.doubt_title}
             </h3>
-            <p className="text-gray-600 text-sm truncate">
+            <p className="text-gray-600 text-sm truncate lg:w-[86%]">
               {doubt.Detail_Problems.length <= 160 ? doubt.Detail_Problems : (
                 <>
                   {`${doubt.Detail_Problems.slice(0, 157)}`}
@@ -86,6 +86,13 @@ const Doubts = () => {
           </div>
         </div>
       ))}
+      {
+        filteredData.length ===0 && (
+          <div className='flex justify-center items-center h-screen text-3xl'>
+             <strong>No Result Found !!</strong>
+          </div>
+        )
+      }
     </div>
   );
 };

@@ -82,6 +82,14 @@ const Quizes = () => {
 
             </div>
           ))}
+
+          {
+            filteredQuizzes.length ===0 && (
+              <div className=' flex justify-center items-center h-screen text-2xl'>
+                  <strong>No Quiz Found !! </strong> 
+              </div>
+            )
+          }
         </div>
       </div>
 
